@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+          <div class="col-md-12">
+            {% include "sidebar.html" %}
+            <div class="col-md-9">
+              <div class="main-panel">
+                <div class="header">
+                  <div class="special-btn">
+          <button class="btn btn-primary right">Submit Ticket</button>
+                  </div>
+                  <h3><img src="{{ STATIC_URL }}/images/support-48.png"></img> Support</h3>
+                </div>
+                <div class="well">
+                  <div class="tickets">
+                    <h3><img src="{{ STATIC_URL }}/images/ticket-48.png"></img> Tickets</h3>
+                    <div class="tickets-all">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><a href="#">0001</a></td>
+                            <td>March 13, 2014</td>
+                            <td>Security</td>
+                            <td>Is my data safe?</td>
+                            <td><div class="label label-success">open</div></td>
+                          </tr>
+                          <tr>
+                            <td><a href="#">0002</a></td>
+                            <td>March 1, 2014</td>
+                            <td>Service and Products</td>
+                            <td>How to add users?</td>
+                            <td><div class="label label-default">closed</div></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}

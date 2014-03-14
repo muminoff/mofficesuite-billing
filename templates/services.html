@@ -1,27 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
           <div class="col-md-12">
-
-            <div class="col-md-3">
-              <div class="sidebar">
-                <div class="list-group">
-                  <a href="#" class="list-group-item active"><img src="/static/images/a1dd080e.services-32-alt.png"> Services</a>
-                  <a href="#" class="list-group-item"><img src="/static/images/1e6591f1.user-32.png"></img> Account</a>
-                  <a href="#" class="list-group-item"><img src="/static/images/762bfcac.bill-32.png"></img> Billing</a>
-                  <a href="#" class="list-group-item"><img src="/static/images/93b1bac2.support-32.png"></img> Support</a>
-                </div>
-              </div>
-              <button id="feedback-btn" class="btn btn-default" data-toggle="tooltip" data-replacement="bottom" title="Help us improve! Leave feedback."><img src="/static/images/bf0a35d4.feedback-32.png"></img></button>
-              <button id="signout-btn" class="btn btn-default" data-toggle="tooltip" data-replacement="bottom" title="Logout"><img src="/static/images/8fcf4409.signout-32.png"></img></button>
-            </div>
-
+            {% include "sidebar.html" %}
             <div class="col-md-9">
               <div class="main-panel">
                 <div class="header">
                   <div class="special-btn">
                     <button class="btn btn-primary right">Add service</button>
                   </div>
-                  <h3><img src="/static/images/f3126a0f.services-48.png"></img> Services</h3>
+                  <h3><img src="{{ STATIC_URL }}/images/services-48.png"></img> Services</h3>
                 </div>
                 <div class="well">
                   <table class="table">
@@ -37,41 +24,41 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td class="service-item">Moffice Messenger <a href="#" class="service-link"><img src="/static/images/8a1dfe24.link-16.png"></img></a></td>
+                        <td class="service-item">Moffice Messenger <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
                         <td>211.123.43.21</td>
                         <td>20</td>
                         <td><div class="label label-success">Active</div></td>
                         <td>20 GB</td>
                         <td>
                           <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="/static/images/6ef71cd9.edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="/static/images/ae62c724.delete-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <td class="service-item">Moffice CloudDisk <a href="#" class="service-link"><img src="/static/images/8a1dfe24.link-16.png"></img></a></td>
+                        <td class="service-item">Moffice CloudDisk <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
                         <td>211.123.43.25</td>
                         <td>10</td>
                         <td><div class="label label-success">Active</div></td>
                         <td>10 GB</td>
                         <td>
                           <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="/static/images/6ef71cd9.edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="/static/images/ae62c724.delete-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <td class="service-item">Moffice Standard <a href="#" class="service-link"><img src="/static/images/8a1dfe24.link-16.png"></img></a></td>
+                        <td class="service-item">Moffice Standard <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
                         <td>211.123.43.20</td>
                         <td>1</td>
                         <td><div class="label label-success">Active</div></td>
                         <td>2 GB</td>
                         <td>
                           <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="/static/images/6ef71cd9.edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="/static/images/ae62c724.delete-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
+                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
                           </div>
                         </td>
                       </tr>

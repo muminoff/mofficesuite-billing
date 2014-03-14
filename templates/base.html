@@ -12,10 +12,10 @@
         <meta name="description" content="Moffice Suite Billing">
         <meta name="author" content="Hanbiro Inc.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="{% static '6df2b309.favicon.ico' %}">
-        <link rel="stylesheet" href="{% static 'css/1d7769e0.vendor.css' %}"/>
-        <link rel="stylesheet" href="{% static 'css/dc80b230.main.css' %}"/>
-        <script src="{% static 'js/vendor/9dfcc0d3.modernizr.js' %}"></script>
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+        <link rel="stylesheet" href="{% static 'styles/vendor.css' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/main.css' %}"/>
+        <script src="{% static 'scripts/vendor/modernizr.js' %}"></script>
         {% block extra_css %}{% endblock extra_css %}
     </head> 
     <body>
@@ -24,9 +24,9 @@
         <p>Project under heavy development</p>
         {% endblock content %}
       </div>
-      <script src="{% static 'js/a92a213a.vendor.js' %}"></script> 
-      <script src="{% static 'js/c6b52431.plugins.js' %}"></script> 
-      <script src="{% static 'js/8110da81.main.js' %}"></script>
+      <script src="{% static 'scripts/vendor.js' %}"></script> 
+      <script src="{% static 'scripts/plugins.js' %}"></script> 
+      <script src="{% static 'scripts/main.js' %}"></script>
       {% block extra_js %}{% endblock extra_js %}
     </body>
 </html>
