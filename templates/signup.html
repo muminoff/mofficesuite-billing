@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+            <div class="col-sm-offset-3 col-sm-6">
+              <div class="signup-form">
+                <h4>Create your Moffice Suite Account</h4>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <select class="form-control" id="inputPlan">
+                        <option value="standard">Moffice Suite Lite - $0.5 per user/month</option>
+                        <option value="standard">Moffice Suite Standard - $1 per user / month</option>
+                        <option value="standard">Moffice Suite Standard+ - $2 per user / month</option>
+                        <option value="standard">Moffice Suite Advanced - $3 per user / month</option>
+                        <option value="standard">Moffice Messenger - $0.5 per user / month</option>
+                        <option value="standard">Moffice CloudDisk - $0.5 per user / month</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <button type="submit" class="btn btn-success btn-lg btn-block">Sign Up</button>
+                    </div>
+                  </div>
+                </form>
+                <div class="accept-div">
+                  <p>By signing up, you agree to the <a href="#">Terms of Service</a></p>
+                </div>
+              </div>
+            </div> 
+{% endblock %}
