@@ -76,5 +76,6 @@ CACHES = {
 
 ########## SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = get_env_setting('SECRET_KEY')
+# SECRET_KEY = get_env_setting('SECRET_KEY')
+SECRET_KEY = '23h4j6f2k3j5h47fg2k34jh7g57'
 ########## END SECRET CONFIGURATION
