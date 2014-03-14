@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Add service{% endblock %}
+{% block content %}
+          <div class="col-md-12">
+            {% include "sidebar.html" %}
+            <div class="col-md-9">
+              <div class="main-panel">
+                <div class="header">
+                  <h3><img src="{{ STATIC_URL }}images/service-48.png"></img>Add service</h3>
+                </div>
+                <div class="well-panel">
+                  <div class="contact-information">
+                    <h3>Choose Service</h3>
+                    <form role="form">
+                      <div class="form-group">
+                        <label for="inputService">Available Services</label>
+                        <select class="form-control" id="inputService">
+                          <option value="standard">Moffice Suite Lite - $0.5 per user/month</option>
+                          <option value="standard">Moffice Suite Standard - $1 per user / month</option>
+                          <option value="standard">Moffice Suite Standard+ - $2 per user / month</option>
+                          <option value="standard">Moffice Suite Advanced - $3 per user / month</option>
+                          <option value="standard">Moffice Messenger - $0.5 per user / month</option>
+                          <option value="standard">Moffice CloudDisk - $0.5 per user / month</option>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn btn-info btn-lg btn-block">Add Service</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}

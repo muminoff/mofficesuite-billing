@@ -27,6 +27,9 @@ urlpatterns = patterns('',
     url(r'^support/$', 'core.views.support_page', name='support_page'),
     url(r'^feedback/$', 'core.views.feedback_page', name='feedback_page'),
     url(r'^payment/$', 'core.views.payment_page', name='payment_page'),
+    url(r'^security/$', 'core.views.security_settings_page', name='security_settings_page'),
+    url(r'^service/add/$', 'core.views.service_add_page', name='service_add_page'),
+    url(r'^ticket/add/$', 'core.views.ticket_add_page', name='ticket_add_page'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

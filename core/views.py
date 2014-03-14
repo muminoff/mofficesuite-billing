@@ -29,3 +29,12 @@ def feedback_page(request):
 
 def payment_page(request):
     return render(request, 'payment.html')
+
+def security_settings_page(request):
+    return render(request, 'security_settings.html')
+
+def service_add_page(request):
+    return render(request, 'service_add.html')
+
+def ticket_add_page(request):
+    return render(request, 'ticket_add.html')
