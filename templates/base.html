@@ -18,23 +18,16 @@
         <script src="{{ STATIC_URL }}js/vendor/9dfcc0d3.modernizr.js"></script>
         {% block extra_css %}{% endblock extra_css %}
     </head> 
-
-
-  <body>
-
-
-    <div class="container">
-
-      <h1>{% block page_title %}Moffice Suite Billing System{% endblock page_title %}</h1>
-      {% block content %}
+    <body>
+      <div class="container">
+        <h1>{% block page_title %}Moffice Suite Billing System{% endblock page_title %}</h1>
+        {% block content %}
         <p>Project under heavy development</p>
-      {% endblock content %}
-
-    </div> <!-- /container -->
-
-    <script src="{{ STATIC_URL }}js/a92a213a.vendor.js"></script> 
-    <script src="{{ STATIC_URL }}js/c6b52431.plugins.js"></script> 
-    <script src="{{ STATIC_URL }}js/8110da81.main.js"></script>
-    {% block extra_js %}{% endblock extra_js %}
-  </body>
+        {% endblock content %}
+      </div>
+      <script src="{{ STATIC_URL }}js/a92a213a.vendor.js"></script> 
+      <script src="{{ STATIC_URL }}js/c6b52431.plugins.js"></script> 
+      <script src="{{ STATIC_URL }}js/8110da81.main.js"></script>
+      {% block extra_js %}{% endblock extra_js %}
+    </body>
 </html>
