@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}MofficeSuite Billing{% endblock title %}</title>
+        <meta name="description" content="Moffice Suite Billing">
+        <meta name="author" content="Hanbiro Inc.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static '6df2b309.favicon.ico' %}">
+        <link rel="stylesheet" href="{% static 'css/1d7769e0.vendor.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/dc80b230.main.css' %}"/>
+        <script src="{% static 'js/vendor/9dfcc0d3.modernizr.js' %}"></script>
+        {% block extra_css %}{% endblock extra_css %}
+    </head> 
+
+
+  <body>
+
+
+    <div class="container">
+
+      <h1>{% block page_title %}Moffice Suite Billing System{% endblock page_title %}</h1>
+      {% block content %}
+        <p>Project under heavy development</p>
+      {% endblock content %}
+
+    </div> <!-- /container -->
+
+    <script src="{% static 'js/a92a213a.vendor.js' %}"></script> 
+    <script src="{% static 'js/c6b52431.plugins.js' %}"></script> 
+    <script src="{% static 'js/8110da81.main.js' %}"></script>
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>
