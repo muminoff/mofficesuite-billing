@@ -25,6 +25,8 @@ urlpatterns = patterns('',
     url(r'^account/$', 'core.views.account_page', name='account_page'),
     url(r'^billing/$', 'core.views.billing_page', name='billing_page'),
     url(r'^support/$', 'core.views.support_page', name='support_page'),
+    url(r'^feedback/$', 'core.views.feedback_page', name='feedback_page'),
+    url(r'^payment/$', 'core.views.payment_page', name='payment_page'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

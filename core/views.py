@@ -24,8 +24,8 @@ def billing_page(request):
 def support_page(request):
     return render(request, 'support.html')
 
-# def feedback_page(request):
-#     return render(request, 'feedback.html')
+def feedback_page(request):
+    return render(request, 'feedback.html')
 
-# def payments_page(request):
-#     return render(request, 'payments.html')
+def payment_page(request):
+    return render(request, 'payment.html')
