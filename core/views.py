@@ -3,11 +3,16 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from core.models import MofficeUser
+
+from django.db import IntegrityError
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 def login_page(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('account_page'))
+        return HttpResponseRedirect(reverse('services_page'))
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -44,7 +49,46 @@ def logout_page(request):
     return HttpResponseRedirect(reverse('login_page'))
 
 def signup_page(request):
-    return render(request, 'signup.html')
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('services_page'))
+
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if not email and not password:
+            context = {"form_message": {"error": "Signup error", "message": "All fields required"}}
+            return render(request, 'signup.html', context)
+
+        user = MofficeUser()
+
+        try:
+            validate_email(email)
+
+        except ValidationError:
+            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address"}}
+            return render(request, 'signup.html', context)
+            
+        user.email = email
+        user.set_password(password)
+
+        try:
+            user.save()
+
+        except IntegrityError:
+            context = {"form_message": {"error": "Signup error", "message": "Email already exists."}}
+            return render(request, 'signup.html', context)
+
+        context = {"form_message": {"error": "Signup successful", "message": "We have sent confirmation email to you. Please, check."}}
+        return render(request, 'signup.html', context)
+        return HttpResponseRedirect(reverse('services_page'))
+            
+
+    else:
+        return render(request, 'signup.html')
+
+def forgot_password_page(request):
+    return render(request, 'forgot_password.html')
 
 @login_required
 def index_page(request):
