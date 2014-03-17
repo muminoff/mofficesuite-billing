@@ -7,5 +7,5 @@
                 </div>
               </div>
               <button id="feedback-btn" class="btn btn-default" onClick="window.location.href='{% url "feedback_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Send feedback"><img src="{{ STATIC_URL }}images/feedback-32.png"></img></button>
-              <button id="signout-btn" class="btn btn-default" data-toggle="tooltip" data-replacement="bottom" title="Logout"><img src="{{ STATIC_URL }}images/logout-32.png"></img></button>
+              <button id="signout-btn" class="btn btn-default" onClick="window.location.href='{% url "logout_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Logout {{ request.user.email }}"><img src="{{ STATIC_URL }}images/logout-32.png"></img></button>
             </div>

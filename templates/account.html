@@ -11,8 +11,47 @@
                   </div>
                   <h3><img src="{{ STATIC_URL }}/images/user-48.png"></img>Account</h3>
                 </div>
-                <div class="well"></div>
               </div>
+                <div class="well-panel">
+                  <div class="alert alert-success fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <p>Your settings has been updated.</p>
+                  </div>
+                  <div class="my-account">
+                    <h3><img src="{{ STATIC_URL }}/images/contact-48.png"></img> My Account</h3>
+                    <div class="my-account-all">
+                      <p><img src="{{ STATIC_URL }}/images/my-email-24.png"></img> <a href="mailto:sardor@hanbiro.com">sardor@hanbiro.com</a></p>
+                      <p><img src="{{ STATIC_URL }}/images/my-time-24.png"></img> Member since 03/05/2014</p>
+                      <p><button class="btn btn-danger btn-sm">Deactivate Account</button></p>
+                    </div>
+                  </div>
+                  <div class="contact-information">
+                    <h3><img src="{{ STATIC_URL }}/images/contact-48.png"></img> Billing Information<small>Deliver</small></h3>
+                    <form role="form">
+                      <div class="form-group">
+                        <label for="inputFirstName">First name</label>
+                        <input type="text" class="form-control" id="inputFirstName" placeholder="First name">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputLastName">Last name</label>
+                        <input type="text" class="form-control" id="inputLastName" placeholder="Last name">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress">Mailing Address</label>
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Last name">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputCompany">Company Name</label>
+                        <input type="text" class="form-control" id="inputCompany" placeholder="Company name">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPhone">Phone Number</label>
+                        <input type="text" class="form-control" id="inputPhone" placeholder="Phone number">
+                      </div>
+                      <button type="submit" class="btn btn-success btn-lg btn-block">Save Changes</button>
+                    </form>
+                  </div>
+                </div>
             </div>
 
           </div>

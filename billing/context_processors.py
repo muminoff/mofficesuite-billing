@@ -7,6 +7,9 @@ def sidebar(request):
     if request.user.is_authenticated and request.user.is_staff:
         menus = OrderedDict([
             ('services_page', {'title': 'Services', 'icon': 'services'}),
+            ('account_page', {'title': 'Account', 'icon': 'user'}),
+            ('billing_page', {'title': 'Billing', 'icon': 'bill'}),
+            ('support_page', {'title': 'Support', 'icon': 'support'}),
             ])
     else:
         menus = OrderedDict([

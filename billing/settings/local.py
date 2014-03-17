@@ -64,3 +64,5 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = ('127.0.0.1',)
 ########## END TOOLBAR CONFIGURATION
 AUTH_USER_MODEL = 'core.MofficeUser'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'

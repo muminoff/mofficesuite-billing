@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^$', 'core.views.index_page', name='index_page'),
     url(r'^login/$', 'core.views.login_page', name='login_page'),
+    url(r'^logout/$', 'core.views.logout_page', name='logout_page'),
     url(r'^signup/$', 'core.views.signup_page', name='signup_page'),
     url(r'^services/$', 'core.views.services_page', name='services_page'),
     url(r'^account/$', 'core.views.account_page', name='account_page'),
