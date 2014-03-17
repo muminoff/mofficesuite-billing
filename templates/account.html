@@ -16,7 +16,7 @@
                 <h3><img src="{{ STATIC_URL }}images/contact-48.png"></img> My Account</h3>
                 <p><img src="{{ STATIC_URL }}images/my-email-24.png"></img> <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a></p>
                 <p><img src="{{ STATIC_URL }}images/my-time-24.png"></img> Member since {{ request.user.last_login| date:"m/d/Y" }} </p>
-                <p><button class="btn btn-danger btn-sm" onClick='alert("Not implemented yet")'>Deactivate Account</button></p>
+                <p><button class="btn btn-danger btn-sm btn-cap-2" onClick='alert("Not implemented yet")'><img src="{{ STATIC_URL }}images/deactivate-16-alt.png"></img> Deactivate Account</button></p>
               </div>
             </div>
 

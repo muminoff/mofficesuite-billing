@@ -24,6 +24,11 @@
                     </div>
                   </div>
                 </form>
+                {% if form_message %}
+                <div class="alert alert-danger">
+                  <p style="text-align: center">{{ form_message.message }}</p>
+                </div>
+                {% endif %}
                 <div class="forgot-div">
                   <p><a href="#">Forgot password?</a></p>
                 </div>
