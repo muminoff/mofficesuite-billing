@@ -2,11 +2,11 @@
 {% block content %}
             <div class="col-sm-offset-3 col-sm-6">
               <div class="login-form">
-                <h4>Moffice Suite Billing Panel</h4>
+                <h3>Moffice Suite Account Management</h3>
                 <form class="form-horizontal" role="form">
                   <div class="form-group">
                     <div class="col-sm-12">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                      <input type="email" class="form-control" id="inputEmail3" placeholder="Email address">
                     </div>
                   </div>
                   <div class="form-group">
@@ -24,7 +24,7 @@
                   <p><a href="#">Forgot password?</a></p>
                 </div>
                 <div class="account-div">
-                  <p>Don't have account? <a href="#">Sign-Up</a></p>
+                    <p>Don't have account? <a href="{% url "signup_page" %}">Sign-Up</a></p>
                 </div>
               </div>
             </div> 
