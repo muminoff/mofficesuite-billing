@@ -5,6 +5,9 @@
                 <h3>Moffice Suite Account Management</h3>
                 <form class="form-horizontal" role="form" action="{% url "login_page" %}" method="POST">
                   {% csrf_token %}
+                  {% if next %}
+                  <input type="hidden" name="next" value="{{ next }}">
+                  {% endif %}
                   <div class="form-group">
                     <div class="col-sm-12">
                       <input type="email" class="form-control" id="email" name="email" placeholder="Email address">

@@ -17,7 +17,6 @@ def login_page(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                print '>>>>>>>>>>>>>>>>>>>>>>>> OK'
                 next_page = request.POST.get('next')
                 if next_page:
                     return HttpResponseRedirect(next_page)
