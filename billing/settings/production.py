@@ -79,3 +79,6 @@ CACHES = {
 # SECRET_KEY = get_env_setting('SECRET_KEY')
 SECRET_KEY = '23h4j6f2k3j5h47fg2k34jh7g57'
 ########## END SECRET CONFIGURATION
+AUTH_USER_MODEL = 'core.MofficeUser'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
