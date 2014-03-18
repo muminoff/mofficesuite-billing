@@ -16,7 +16,7 @@
                   {% endif %}
                   <div class="contact-information">
                     <h3>Choose Service</h3>
-                    <form role="form" action="{% url "services_page" %}" method="POST">
+                    <form role="form" action="{% url "service_add_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
                         <label for="inputService">Available Services</label>

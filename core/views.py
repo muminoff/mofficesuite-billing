@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Account, BaseService
+from core.models import Account, BaseService, AccountService
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -162,8 +162,14 @@ def service_add_page(request):
 
         try:
             this_user = Account.objects.get(email=request.user.email)
-            this_service = BaseService.objects.get(id=service)
-            this_user.services.add(this_service)
+            chosen_base_service = BaseService.objects.get(id=service)
+            new_account_service = AccountService()
+            new_account_service.service_type = chosen_base_service
+            new_account_service.users = 1
+            new_account_service.ip_address = '127.0.0.1'
+            new_account_service.save()
+
+            this_user.services.add(new_account_service)
 
         except:
             context = {"form_message": {"error": "Add service error", "message": "Server error", "type": "danger"}}
