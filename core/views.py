@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 
 def login_page(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('services_page'))
+        return HttpResponseRedirect(reverse('index_page'))
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -50,7 +50,7 @@ def logout_page(request):
 
 def signup_page(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('services_page'))
+        return HttpResponseRedirect(reverse('index_page'))
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -88,7 +88,26 @@ def signup_page(request):
         return render(request, 'signup.html')
 
 def forgot_password_page(request):
-    return render(request, 'forgot_password.html')
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('index_page'))
+
+    if request.method == "POST":
+        email = request.POST.get('email')
+
+        if not email:
+            context = {"form_message": {"error": "Signup error", "message": "Give us your email address"}}
+            return render(request, 'forgot_password.html', context)
+
+        #TODO
+        #Password reset email send
+
+        context = {"form_message": {"error": "Password reset successful", "message": "We have sent password reset link to you."}}
+        return render(request, 'forgot_password.html', context)
+            
+
+    else:
+        return render(request, 'forgot_password.html')
+
 
 @login_required
 def index_page(request):
