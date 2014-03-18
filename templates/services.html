@@ -20,50 +20,37 @@
                         <th>Users</th>
                         <th>Status</th>
                         <th>Disk</th>
-                        <th></th>
+                        <th style="text-align: right" class="service-charge-column">Monthly charge</th>
+                        <td></td>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td class="service-item">Moffice Messenger <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
-                        <td>211.123.43.21</td>
-                        <td>20</td>
-                        <td><div class="label label-success">Active</div></td>
-                        <td>20 GB</td>
-                        <td>
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
-                          </div>
-                        </td>
+                      {% if not services %}
+                      <tr class="warning">
+                        <td colspan="7">You don't have services yet. For adding service, click above button to proceed.</td>
                       </tr>
+                      {% endif %}
+                      {% for service in services %}
                       <tr>
-                        <td class="service-item">Moffice CloudDisk <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
-                        <td>211.123.43.25</td>
-                        <td>10</td>
+                          <td class="service-item"><a href="#">{{ service.service_type.name }}</a> <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
+                          <td>{{ service.ip_address }}</td>
+                          <td>{{ service.users }}</td>
                         <td><div class="label label-success">Active</div></td>
-                        <td>10 GB</td>
-                        <td>
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
-                          </div>
-                        </td>
+                        <td>{{ service.disk_size }} GB</td>
+                        <td align="right">${{ service.current_bill }}</td>
+                        <td></td>
                       </tr>
-                      <tr>
-                        <td class="service-item">Moffice Standard <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
-                        <td>211.123.43.20</td>
-                        <td>1</td>
-                        <td><div class="label label-success">Active</div></td>
-                        <td>2 GB</td>
-                        <td>
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-warning btn-xs"><img src="{{ STATIC_URL }}/images/edit-16-alt.png"></img></button>
-                            <button type="button" class="btn btn-danger btn-xs"><img src="{{ STATIC_URL }}/images/delete-16-alt.png"></img></button>
-                          </div>
-                        </td>
-                      </tr>
+                      {% endfor %}
                     </tbody>
+                    {% if services %}
+                    <tfoot>
+                      <tr>
+                        <td colspan="5"></td>
+                        <td align="right"><strong>Total ${{ request.user.get_current_state_bill }}</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                    {% endif %}
                   </table>
                 </div>
               </div>

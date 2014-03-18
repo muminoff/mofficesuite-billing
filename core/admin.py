@@ -1,3 +1,8 @@
 from django.contrib import admin
+from core.models import BaseService, AccountService, Account
 
-# Register your models here.
+
+admin.site.register(BaseService)
+admin.site.register(AccountService)
+admin.site.register(Account)
+

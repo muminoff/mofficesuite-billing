@@ -22,7 +22,7 @@
                   </div>
                 </form>
                 {% if form_message %}
-                <div class="alert alert-danger">
+                <div class="alert alert-{{ form_message.type }}">
                   <p style="text-align: center">{{ form_message.message }}</p>
                 </div>
                 {% endif %}

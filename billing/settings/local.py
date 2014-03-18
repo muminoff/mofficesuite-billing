@@ -26,12 +26,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': normpath(join(DJANGO_ROOT, 'default.db')),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'billing',
+        'USER': 'billing',
+        'PASSWORD': 'billing',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 ########## END DATABASE CONFIGURATION
@@ -63,6 +63,6 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 # http://django-debug-toolbar.readthedocs.org/en/latest/installation.html
 INTERNAL_IPS = ('127.0.0.1',)
 ########## END TOOLBAR CONFIGURATION
-AUTH_USER_MODEL = 'core.MofficeUser'
+AUTH_USER_MODEL = 'core.Account'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'

@@ -3,12 +3,16 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import MofficeUser
+from core.models import Account, BaseService
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
+
+@login_required
+def index_page(request):
+    return HttpResponseRedirect(reverse('services_page'))
 
 def login_page(request):
     if request.user.is_authenticated():
@@ -57,31 +61,30 @@ def signup_page(request):
         password = request.POST.get('password')
 
         if not email and not password:
-            context = {"form_message": {"error": "Signup error", "message": "All fields required"}}
+            context = {"form_message": {"error": "Signup error", "message": "All fields required", "type": "danger"}}
             return render(request, 'signup.html', context)
 
-        user = MofficeUser()
 
         try:
             validate_email(email)
 
         except ValidationError:
-            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address"}}
+            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address", "type": "danger"}}
             return render(request, 'signup.html', context)
             
-        user.email = email
-        user.set_password(password)
 
         try:
+            user = Account()
+            user.email = email
+            user.set_password(password)
             user.save()
 
         except IntegrityError:
-            context = {"form_message": {"error": "Signup error", "message": "Email already exists."}}
+            context = {"form_message": {"error": "Signup error", "message": "Email already exists.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
-        context = {"form_message": {"error": "Signup successful", "message": "We have sent confirmation email to you. Please, check."}}
+        context = {"form_message": {"error": "Signup successful", "message": "We have sent confirmation email to you. Please, check.", "type": "success"}}
         return render(request, 'signup.html', context)
-        return HttpResponseRedirect(reverse('services_page'))
             
 
     else:
@@ -95,13 +98,21 @@ def forgot_password_page(request):
         email = request.POST.get('email')
 
         if not email:
-            context = {"form_message": {"error": "Signup error", "message": "Give us your email address"}}
+            context = {"form_message": {"error": "Password reset error", "message": "Give us your email address", "type": "danger"}}
             return render(request, 'forgot_password.html', context)
 
-        #TODO
-        #Password reset email send
+        try:
+            this_user = Account.objects.get(email=email)
+            #TODO
+            #Password reset mail send
+            # send_password_reset_link(email)
 
-        context = {"form_message": {"error": "Password reset successful", "message": "We have sent password reset link to you."}}
+        except Account.DoesNotExist:
+            context = {"form_message": {"error": "Password reset error", "message": "Email not found.", "type": "danger"}}
+            return render(request, 'forgot_password.html', context)
+
+
+        context = {"form_message": {"error": "Password reset successful", "message": "We have sent password reset link to you.", "type": "success"}}
         return render(request, 'forgot_password.html', context)
             
 
@@ -110,12 +121,10 @@ def forgot_password_page(request):
 
 
 @login_required
-def index_page(request):
-    return HttpResponseRedirect(reverse('services_page'))
-
-@login_required
 def services_page(request):
-    return render(request, 'services.html')
+    current_user = Account.objects.get(email=request.user.email)
+    context = { "services": current_user.services.all() }
+    return render(request, 'services.html', context)
 
 @login_required
 def account_page(request):
@@ -143,7 +152,28 @@ def security_settings_page(request):
 
 @login_required
 def service_add_page(request):
-    return render(request, 'service_add.html')
+    if request.method == "POST":
+
+        service = request.POST.get('service')
+
+        if not service:
+            context = {"form_message": {"error": "Add service error", "message": "Choose service to add", "type": "danger"}}
+            return render(request, 'service_add.html', context)
+
+        try:
+            this_user = Account.objects.get(email=request.user.email)
+            this_service = BaseService.objects.get(id=service)
+            this_user.services.add(this_service)
+
+        except:
+            context = {"form_message": {"error": "Add service error", "message": "Server error", "type": "danger"}}
+            return render(request, 'service_add.html', context)
+
+        return HttpResponseRedirect(reverse('index_page'))
+
+    else:
+        context = { "services": BaseService.objects.all()}
+        return render(request, 'service_add.html', context)
 
 @login_required
 def ticket_add_page(request):
