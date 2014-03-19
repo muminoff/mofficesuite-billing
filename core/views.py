@@ -56,12 +56,17 @@ def signup_page(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('index_page'))
 
+
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        if Account.objects.filter(email=email).count():
+            context = {"form_message": {"error": "Signup error", "message": "Email already exists.", "type": "danger"}}
+            return render(request, 'signup.html', context)
+
         if not email and not password:
-            context = {"form_message": {"error": "Signup error", "message": "All fields required", "type": "danger"}}
+            context = {"form_message": {"error": "Signup error", "message": "All fields required.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
 
@@ -69,7 +74,7 @@ def signup_page(request):
             validate_email(email)
 
         except ValidationError:
-            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address", "type": "danger"}}
+            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address.", "type": "danger"}}
             return render(request, 'signup.html', context)
             
 
@@ -79,16 +84,17 @@ def signup_page(request):
             user.set_password(password)
             user.save()
 
-        except IntegrityError:
-            context = {"form_message": {"error": "Signup error", "message": "Email already exists.", "type": "danger"}}
+        except:
+            context = {"form_message": {"error": "Signup error", "message": "Internal server error.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
-        context = {"form_message": {"error": "Signup successful", "message": "We have sent confirmation email to you. Please, check.", "type": "success"}}
+        context = {"form_message": {"error": "Signup successful", "message": "Activation link sent.", "type": "success"}}
         return render(request, 'signup.html', context)
             
 
     else:
         return render(request, 'signup.html')
+
 
 def forgot_password_page(request):
     if request.user.is_authenticated():
