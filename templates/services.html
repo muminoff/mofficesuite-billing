@@ -12,15 +12,21 @@
                   <h3><span class="icon-cloud"></span> Services</h3>
                 </div>
                 <div class="well-panel">
+                  {% if form_message %}
+                  <div class="alert alert-{{ form_message.type }}">
+                      <p style="text-align: center">{{ form_message.message }}</p>
+                  </div>
+                  {% endif %}
                   <table class="table services">
                     <thead>
                       <tr>
-                        <th class="service-name-column">Name</th>
-                        <th>IP Address</th>
+                        <th>Name</th>
+                        <th>Plan</th>
                         <th>Users</th>
                         <th>Status</th>
                         <th>Disk</th>
-                        <th style="text-align: right" class="service-charge-column">Monthly charge</th>
+                        <th>Last Modified</th>
+                        <!-- <th style="text-align: right">Monthly charge</th> -->
                         <td></td>
                       </tr>
                     </thead>
@@ -33,11 +39,12 @@
                       {% for service in services %}
                       <tr>
                       <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="http://{{ service.hostname }}.mofficesuite.com/" target="_blank" class="service-link"><span class="icon-attachment"></span></a></td>
-                        <td>{{ service.ip_address }}</td>
+                        <td>{{ service.plan }}</td>
                         <td>{{ service.users }}</td>
                         <td><div class="label label-success">Active</div></td>
                         <td>{{ service.disk_size }} GB</td>
-                        <td align="right">${{ service.current_bill }}</td>
+                        <td>{{ service.updated_at|date:'m/d/Y H:i:s' }}</td>
+                        <!-- <td align="right">${{ service.current_bill }}</td> -->
                         <td></td>
                       </tr>
                       {% endfor %}
@@ -45,8 +52,8 @@
                     {% if services %}
                     <tfoot>
                       <tr>
-                        <td colspan="5"></td>
-                        <td align="right"><strong>Total ${{ request.user.get_current_state_bill }}</td>
+                        <td colspan="6"></td>
+                        <!-- <td align="right"><strong>Total ${{ request.user.get_current_state_bill }}</td> -->
                         <td></td>
                       </tr>
                     </tfoot>

@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Account, BaseService, AccountService
+from core.models import Account, Service, Plan
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -129,7 +129,10 @@ def forgot_password_page(request):
 @login_required
 def services_page(request):
     current_user = Account.objects.get(email=request.user.email)
-    context = { "services": current_user.services.all() }
+    context = { 
+            "services": current_user.services.all(),
+            "form_message": {"error": "Settings", "message": "Logged in!", "type": "success"}
+            }
     return render(request, 'services.html', context)
 
 @login_required
@@ -137,12 +140,55 @@ def account_page(request):
     return render(request, 'account.html')
 
 @login_required
+def deactivate_page(request):
+    if request.method == "POST":
+
+        try:
+            this_user = Account.objects.get(id=request.user.id)
+            this_user.delete()
+
+        except Exception as e:
+            context = {"form_message": {"error": "Moffice Suite", "message": "Your account has been fully deactivated. Thanks for using Moffice Suite!", "type": "info"}}
+            return render(request, 'login.html', context)
+
+        context = {"form_message": {"error": "Moffice Suite", "message": "Your account has been <strong>FULLY DEACTIVATED</strong>. Thanks for using Moffice Suite!", "type": "warning"}}
+        return render(request, 'login.html', context)
+
+    else:
+        return render(request, 'deactivate.html')
+
+@login_required
 def billing_page(request):
     return render(request, 'billing.html')
 
 @login_required
 def settings_page(request):
-    return render(request, 'settings.html')
+    if request.method == "POST":
+
+        first = request.POST.get('first')
+        last = request.POST.get('last')
+        address = request.POST.get('address')
+        company = request.POST.get('company')
+        phone = request.POST.get('phone')
+
+        try:
+            this_user = Account.objects.get(id=request.user.id)
+            this_user.first_name = first
+            this_user.last_name = last
+            this_user.company_address = address
+            this_user.company_name = company
+            this_user.phone_number = phone
+            this_user.save()
+
+        except Exception as e:
+            context = {"form_message": {"error": "Settings error", "message": str(e), "type": "danger"}}
+            return render(request, 'settings.html', context)
+
+        context = {"form_message": {"error": "Settings", "message": "Settings has been updated.", "type": "success"}}
+        return render(request, 'settings.html', context)
+
+    else:
+        return render(request, 'settings.html')
 
 @login_required
 def feedback_page(request):
@@ -164,35 +210,53 @@ def notifications_page(request):
 def service_add_page(request):
     if request.method == "POST":
 
-        service = request.POST.get('service')
+        plan = request.POST.get('plan')
         users = request.POST.get('users')
         ip_address = request.POST.get('ip-address')
         hostname = request.POST.get('hostname')
 
-        if not service:
-            context = {"form_message": {"error": "Add service error", "message": "Choose plan to add", "type": "danger"}}
+        if not plan:
+            context = {
+                    "plans": Plan.objects.all(),
+                    "form_message": {"error": "Add service error", "message": "Choose plan to add for service.", "type": "danger"}
+                    }
+            return render(request, 'service_add.html', context)
+
+        if not hostname:
+            context = {
+                    "plans": Plan.objects.all(),
+                    "form_message": {"error": "Add service error", "message": "Provide hostname for service.", "type": "danger"}
+                    }
+            return render(request, 'service_add.html', context)
+
+        if Service.objects.filter(hostname=hostname).count():
+            context = {
+                    "plans": Plan.objects.all(),
+                    "form_message": {"error": "Add service error", "message": "Hostname \"%s\" already taken." % hostname, "type": "danger"}
+                    }
             return render(request, 'service_add.html', context)
 
         try:
-            this_user = Account.objects.get(email=request.user.email)
-            chosen_base_service = BaseService.objects.get(id=service)
-            new_account_service = AccountService()
-            new_account_service.service_type = chosen_base_service
+            this_user = Account.objects.get(id=request.user.id)
+            chosen_base_plan = Plan.objects.get(id=plan)
+            new_account_service = Service()
+            new_account_service.plan = chosen_base_plan
             new_account_service.users = users
             new_account_service.ip_address = ip_address
             new_account_service.hostname = hostname
+            new_account_service.status = 'activated'
             new_account_service.save()
 
             this_user.services.add(new_account_service)
 
-        except:
-            context = {"form_message": {"error": "Add service error", "message": "Server error", "type": "danger"}}
+        except Exception as e:
+            context = {"form_message": {"error": "Add service error", "message": str(e), "type": "danger"}}
             return render(request, 'service_add.html', context)
 
         return HttpResponseRedirect(reverse('index_page'))
 
     else:
-        context = { "services": BaseService.objects.all()}
+        context = { "plans": Plan.objects.all()}
         return render(request, 'service_add.html', context)
 
 @login_required

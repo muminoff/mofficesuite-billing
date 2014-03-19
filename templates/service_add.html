@@ -18,10 +18,10 @@
                     <form role="form" action="{% url "service_add_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <label for="service">Available Plans</label>
-                        <select class="form-control" id="service" name="service">
-                          {% for service in services %}
-                          <option value="{{ service.id }}">{{ service.name }} - ${{ service.rate }} per user/month</option>
+                        <label for="service">Available plans</label>
+                        <select class="form-control" id="plan" name="plan">
+                          {% for plan in plans %}
+                          <option value="{{ plan.id }}">{{ plan.name }} - ${{ plan.rate }} per user/month</option>
                           {% endfor %}
                         </select>
                       </div>

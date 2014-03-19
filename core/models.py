@@ -5,18 +5,23 @@ import random
 import string
 
 
-def generate_baseservice_id():
+def generate_account_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
-        if not BaseService.objects.filter(pk=id).exists():
-            return 'service-' + id 
-
-
-def generate_accountservice_id():
-    while True:
-        id = ''.join(random.sample(string.lowercase + string.digits, 16))
-        if not BaseService.objects.filter(pk=id).exists():
+        if not Account.objects.filter(pk=id).exists():
             return 'account-' + id 
+
+def generate_plan_id():
+    while True:
+        id = ''.join(random.sample(string.lowercase + string.digits, 16))
+        if not Plan.objects.filter(pk=id).exists():
+            return 'plan-' + id 
+
+def generate_service_id():
+    while True:
+        id = ''.join(random.sample(string.lowercase + string.digits, 16))
+        if not Service.objects.filter(pk=id).exists():
+            return 'service-' + id 
 
 
 class AccountManager(BaseUserManager):
@@ -46,8 +51,8 @@ class AccountManager(BaseUserManager):
         return user
 
 
-class BaseService(models.Model):
-    id = models.CharField(max_length=24, primary_key=True, default=generate_baseservice_id, editable=False)
+class Plan(models.Model):
+    id = models.CharField(max_length=24, primary_key=True, default=generate_plan_id, editable=False)
     name = models.CharField(max_length=50)
     description = models.TextField()
     rate = models.DecimalField(max_digits=5, decimal_places=2)
@@ -57,10 +62,10 @@ class BaseService(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'base_services'
+        db_table = 'plans'
 
 
-class AccountService(models.Model):
+class Service(models.Model):
     STATE_ACTIVE = 'active' #RUN
     STATE_STANDBY = 'standby'#PAUSE
     STATE_STOPPED = 'stopped'#STOP
@@ -69,40 +74,49 @@ class AccountService(models.Model):
             (STATE_STANDBY, 'standby'),
             (STATE_STOPPED, 'stopped'),
             )
-    id = models.CharField(max_length=24, primary_key=True, default=generate_accountservice_id, editable=False)
-    service_type = models.ForeignKey(BaseService)
-    ip_address = models.IPAddressField()
+    id = models.CharField(max_length=24, primary_key=True, default=generate_service_id, editable=False)
+    plan = models.ForeignKey(Plan)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATE_CHOICES, default=STATE_ACTIVE)
+    ip_address = models.IPAddressField()
     users = models.PositiveIntegerField()
     hostname = models.CharField(max_length=255, null=False)
 
     @property
     def disk_size(self):
-        return self.users * BaseService.objects.get(id=self.service_type_id).capacity
+        return self.users * Plan.objects.get(id=self.plan_id).capacity
 
     @property
     def current_bill(self):
         import decimal
-        return self.users * decimal.Decimal(BaseService.objects.get(id=self.service_type_id).rate)
+        return self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
 
     def __unicode__(self):
         return self.hostname
 
     class Meta:
-        db_table = 'client_services'
+        db_table = 'services'
 
 
 class Account(AbstractBaseUser):
+    id = models.CharField(max_length=24, primary_key=True, default=generate_account_id, editable=False)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
-        primary_key=True,
+        unique=True,
         editable=False,
     )
-    services = models.ManyToManyField(AccountService)
+    first_name = models.CharField(max_length=255, null=True)
+    last_name = models.CharField(max_length=255, null=True)
+    company_address = models.CharField(max_length=255, null=True)
+    company_name = models.CharField(max_length=255, null=True)
+    phone_number = models.CharField(max_length=255, null=True)
+    services = models.ManyToManyField(Service, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     joined_date = models.DateTimeField(auto_now_add=True, editable=False)
+    subscribed_to_news = models.BooleanField(default=True)
 
     objects = AccountManager()
 

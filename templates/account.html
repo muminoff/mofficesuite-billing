@@ -12,7 +12,7 @@
               <div class="well-panel">
                 <p><span class="icon-envelope"></span> {{ request.user.email }}</a></p>
                 <p><span class="icon-clock"></span> Member since {{ request.user.joined_date| date:"m/d/Y" }} </p>
-                <p><button class="btn btn-danger btn-sm btn-cap" onClick='alert("Not implemented yet")'>DEACTIVATE ACCOUNT</button></p>
+                <p><button class="btn btn-danger btn-sm btn-cap" onClick='window.location.href="{% url "deactivate_page" %}"'>DEACTIVATE ACCOUNT</button></p>
               </div>
             </div>
 
