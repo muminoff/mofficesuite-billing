@@ -15,7 +15,7 @@
                   <table class="table services">
                     <thead>
                       <tr>
-                        <th class="service-name-column">Hostname</th>
+                        <th class="service-name-column">Name</th>
                         <th>IP Address</th>
                         <th>Users</th>
                         <th>Status</th>
@@ -32,9 +32,9 @@
                       {% endif %}
                       {% for service in services %}
                       <tr>
-                        <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="#" class="service-link"><span class="icon-attachment"></span></a></td>
-                          <td>{{ service.ip_address }}</td>
-                          <td>{{ service.users }}</td>
+                      <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="http://{{ service.hostname }}.mofficesuite.com/" target="_blank" class="service-link"><span class="icon-attachment"></span></a></td>
+                        <td>{{ service.ip_address }}</td>
+                        <td>{{ service.users }}</td>
                         <td><div class="label label-success">Active</div></td>
                         <td>{{ service.disk_size }} GB</td>
                         <td align="right">${{ service.current_bill }}</td>
