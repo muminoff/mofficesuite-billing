@@ -23,7 +23,7 @@ def login_page(request):
         password = request.POST.get('password')
 
         if not email and not password:
-            context = {"form_message": {"error": "Invalid login", "message": "All fields required"}}
+            context = {"form_message": {"error": "Invalid login", "message": "All fields required", "type": "danger"}}
             return render(request, 'login.html', context)
 
         user = authenticate(email=email, password=password)
@@ -36,11 +36,11 @@ def login_page(request):
                 else:
                     return HttpResponseRedirect(reverse('services_page'))
             else:
-                context = {"form_message": {"error": "Invalid login", "message": "Disabled account"}}
+                context = {"form_message": {"error": "Invalid login", "message": "Disabled account", "type": "danger"}}
                 return render(request, 'login.html', context)
 
         else:
-            context = {"form_message": {"error": "Invalid login", "message": "Invalid email or password"}}
+            context = {"form_message": {"error": "Invalid login", "message": "Invalid email or password", "type": "danger"}}
             return render(request, 'login.html', context)
 
     else:
