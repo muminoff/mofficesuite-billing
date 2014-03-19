@@ -140,9 +140,13 @@ def account_page(request):
 def billing_page(request):
     return render(request, 'billing.html')
 
+# @login_required
+# def support_page(request):
+#     return render(request, 'support.html')
+
 @login_required
-def support_page(request):
-    return render(request, 'support.html')
+def settings_page(request):
+    return render(request, 'settings.html')
 
 @login_required
 def feedback_page(request):

@@ -9,14 +9,16 @@ def sidebar(request):
             ('services_page', {'title': 'Services', 'icon': 'services'}),
             ('account_page', {'title': 'Account', 'icon': 'user'}),
             ('billing_page', {'title': 'Billing', 'icon': 'bill'}),
-            ('support_page', {'title': 'Support', 'icon': 'support'}),
+            # ('support_page', {'title': 'Support', 'icon': 'support'}),
+            ('settings_page', {'title': 'Settings', 'icon': 'settings'}),
             ])
     else:
         menus = OrderedDict([
             ('services_page', {'title': 'Services', 'icon': 'services'}),
             ('account_page', {'title': 'Account', 'icon': 'user'}),
             ('billing_page', {'title': 'Billing', 'icon': 'bill'}),
-            ('support_page', {'title': 'Support', 'icon': 'support'}),
+            # ('support_page', {'title': 'Support', 'icon': 'support'}),
+            ('settings_page', {'title': 'Settings', 'icon': 'settings'}),
             ])
 
 

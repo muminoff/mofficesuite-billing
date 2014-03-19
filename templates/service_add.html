@@ -15,17 +15,36 @@
                   </div>
                   {% endif %}
                   <div class="contact-information">
-                    <h3>Choose Service</h3>
                     <form role="form" action="{% url "service_add_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <label for="inputService">Available Services</label>
+                        <label for="service">Plan</label>
                         <select class="form-control" id="service" name="service">
                           {% for service in services %}
                           <option value="{{ service.id }}">{{ service.name }} - ${{ service.rate }} per user/month</option>
                           {% endfor %}
                         </select>
                       </div>
+                      <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="inputFirstName">Users</label>
+                          <input type="number" class="form-control" id="users" placeholder="1" value="1" min="1" max="100">
+                        </div>
+                      </div>
+                      <div class="col-md-10">
+                        <div class="form-group">
+                          <label for="hostname">Hostname</label>
+                          <div class="input-group">
+                            <input id="hostname" name="hostname" type="text" class="form-control">
+                              <span class="input-group-addon">.mofficesuite.com</span>
+                              <span class="input-group-btn">
+                                <button class="btn btn-primary btn-cap" type="button"><img src="{{ STATIC_URL }}images/check-24-alt.png"></img> CHECK</button>
+                              </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                       <button type="submit" class="btn btn-success btn-lg btn-block btn-cap">ADD SERVICE</button>
                     </form>
                   </div>
