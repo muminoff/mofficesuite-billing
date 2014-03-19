@@ -2,10 +2,10 @@
               <div class="sidebar">
                 <div class="list-group">
                   {% for k, v in menus.items %}
-                  <a href="{% url k %}" class="list-group-item {% if v.active %}active{% endif %} menu-font"><img src="{{ STATIC_URL }}images/{{ v.icon }}-32{% if v.active %}-alt{% endif %}.png">{{ v.title }}</a>
+                  <a href="{% url k %}" class="list-group-item {% if v.active %}active{% endif %} menu-font"><span class="icon-{{ v.icon }}"></span> {{ v.title }}</a>
                   {% endfor %}
                 </div>
               </div>
-              <button id="feedback-btn" class="btn btn-default" onClick="window.location.href='{% url "feedback_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Send feedback"><img src="{{ STATIC_URL }}images/feedback-32.png"></img></button>
-              <button id="signout-btn" class="btn btn-default" onClick="window.location.href='{% url "logout_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Logout {{ request.user.email }}"><img src="{{ STATIC_URL }}images/logout-32.png"></img></button>
+              <button id="feedback-btn" class="btn btn-default" onClick="window.location.href='{% url "feedback_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Send feedback"><span class="icon-lightbulb"></span></button>
+              <button id="signout-btn" class="btn btn-default" onClick="window.location.href='{% url "logout_page" %}'" data-toggle="tooltip" data-replacement="bottom" title="Logout {{ request.user.email }}"><span class="icon-sad"></span></button>
             </div>

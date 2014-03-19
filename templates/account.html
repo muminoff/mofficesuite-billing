@@ -6,17 +6,13 @@
             <div class="col-md-9">
               <div class="main-panel">
                 <div class="header">
-                  <div class="special-btn">
-                      <button class="btn btn-security btn-cap" onClick='window.location.href="{% url "security_settings_page" %}"'><img src="{{ STATIC_URL }}images/lock-24-alt.png"></img> SECURITY SETTINGS</button>
-                  </div>
-                  <h3><img src="{{ STATIC_URL }}images/user-48.png"></img>Account</h3>
+                  <h3><span class="icon-profile-male"></span> Account</h3>
                 </div>
               </div>
               <div class="well-panel">
-                <h3><img src="{{ STATIC_URL }}images/contact-48.png"></img> My Account</h3>
-                <p><img src="{{ STATIC_URL }}images/my-email-24.png"></img> <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a></p>
-                <p><img src="{{ STATIC_URL }}images/my-time-24.png"></img> Member since {{ request.user.joined_date| date:"m/d/Y" }} </p>
-                <p><button class="btn btn-danger btn-sm btn-cap" onClick='alert("Not implemented yet")'><img src="{{ STATIC_URL }}images/deactivate-16-alt.png"></img> DEACTIVATE ACCOUNT</button></p>
+                <p><span class="icon-envelope"></span> {{ request.user.email }}</a></p>
+                <p><span class="icon-clock"></span> Member since {{ request.user.joined_date| date:"m/d/Y" }} </p>
+                <p><button class="btn btn-danger btn-sm btn-cap" onClick='alert("Not implemented yet")'>DEACTIVATE ACCOUNT</button></p>
               </div>
             </div>
 

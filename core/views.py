@@ -157,17 +157,24 @@ def payment_page(request):
     return render(request, 'payment.html')
 
 @login_required
-def security_settings_page(request):
-    return render(request, 'security_settings.html')
+def security_page(request):
+    return render(request, 'security.html')
+
+@login_required
+def notifications_page(request):
+    return render(request, 'notifications.html')
 
 @login_required
 def service_add_page(request):
     if request.method == "POST":
 
         service = request.POST.get('service')
+        users = request.POST.get('users')
+        ip_address = request.POST.get('ip-address')
+        hostname = request.POST.get('hostname')
 
         if not service:
-            context = {"form_message": {"error": "Add service error", "message": "Choose service to add", "type": "danger"}}
+            context = {"form_message": {"error": "Add service error", "message": "Choose plan to add", "type": "danger"}}
             return render(request, 'service_add.html', context)
 
         try:
@@ -175,8 +182,9 @@ def service_add_page(request):
             chosen_base_service = BaseService.objects.get(id=service)
             new_account_service = AccountService()
             new_account_service.service_type = chosen_base_service
-            new_account_service.users = 1
-            new_account_service.ip_address = '127.0.0.1'
+            new_account_service.users = users
+            new_account_service.ip_address = ip_address
+            new_account_service.hostname = hostname
             new_account_service.save()
 
             this_user.services.add(new_account_service)

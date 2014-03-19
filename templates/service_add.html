@@ -6,7 +6,7 @@
             <div class="col-md-9">
               <div class="main-panel">
                 <div class="header">
-                  <h3><img src="{{ STATIC_URL }}images/service-48.png"></img>Add service</h3>
+                  <h3><span class="icon-gift"></span> New Service</h3>
                 </div>
                 <div class="well-panel">
                   {% if form_message %}
@@ -18,18 +18,26 @@
                     <form role="form" action="{% url "service_add_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <label for="service">Plan</label>
+                        <label for="service">Available Plans</label>
                         <select class="form-control" id="service" name="service">
                           {% for service in services %}
                           <option value="{{ service.id }}">{{ service.name }} - ${{ service.rate }} per user/month</option>
                           {% endfor %}
                         </select>
                       </div>
+                      <div class="form-group">
+                        <label for="ip-address">IP Address</label>
+                        <select class="form-control" id="ip-address" name="ip-address">
+                          <option value="121.254.175.67">121.254.175.67</option>
+                          <option value="121.254.175.57">121.254.175.57</option>
+                          <option value="121.254.175.7">121.254.175.7</option>
+                        </select>
+                      </div>
                       <div class="row">
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label for="inputFirstName">Users</label>
-                          <input type="number" class="form-control" id="users" placeholder="1" value="1" min="1" max="100">
+                          <label for="users">Users</label>
+                          <input type="number" class="form-control" id="users" name="users" placeholder="1" value="1" min="1" max="100">
                         </div>
                       </div>
                       <div class="col-md-10">
@@ -39,7 +47,7 @@
                             <input id="hostname" name="hostname" type="text" class="form-control">
                               <span class="input-group-addon">.mofficesuite.com</span>
                               <span class="input-group-btn">
-                                <button class="btn btn-primary btn-cap" type="button"><img src="{{ STATIC_URL }}images/check-24-alt.png"></img> CHECK</button>
+                                <button class="btn btn-primary" type="button"><span class="icon-refresh"></span></button>
                               </span>
                           </div>
                         </div>

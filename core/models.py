@@ -74,6 +74,7 @@ class AccountService(models.Model):
     ip_address = models.IPAddressField()
     status = models.CharField(max_length=10, choices=STATE_CHOICES, default=STATE_ACTIVE)
     users = models.PositiveIntegerField()
+    hostname = models.CharField(max_length=255, null=False)
 
     @property
     def disk_size(self):
@@ -85,10 +86,10 @@ class AccountService(models.Model):
         return self.users * decimal.Decimal(BaseService.objects.get(id=self.service_type_id).rate)
 
     def __unicode__(self):
-        return self.service_type.name
+        return self.hostname
 
     class Meta:
-        db_table = 'account_services'
+        db_table = 'client_services'
 
 
 class Account(AbstractBaseUser):

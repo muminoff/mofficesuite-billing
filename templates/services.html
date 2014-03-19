@@ -7,15 +7,15 @@
               <div class="main-panel">
                 <div class="header">
                   <div class="special-btn">
-                    <button class="btn btn-primary" onClick='window.location.href="{% url "service_add_page" %}"'><img src="{{ STATIC_URL }}images/service-32-alt.png">ADD SERVICE</button>
+                    <button class="btn btn-primary" onClick='window.location.href="{% url "service_add_page" %}"'>ADD SERVICE</button>
                   </div>
-                  <h3><img src="{{ STATIC_URL }}/images/services-48.png"></img>Services</h3>
+                  <h3><span class="icon-cloud"></span> Services</h3>
                 </div>
                 <div class="well-panel">
                   <table class="table services">
                     <thead>
                       <tr>
-                        <th class="service-name-column">Name</th>
+                        <th class="service-name-column">Hostname</th>
                         <th>IP Address</th>
                         <th>Users</th>
                         <th>Status</th>
@@ -32,7 +32,7 @@
                       {% endif %}
                       {% for service in services %}
                       <tr>
-                          <td class="service-item"><a href="#">{{ service.service_type.name }}</a> <a href="#" class="service-link"><img src="{{ STATIC_URL }}/images/link-16.png"></img></a></td>
+                        <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="#" class="service-link"><span class="icon-attachment"></span></a></td>
                           <td>{{ service.ip_address }}</td>
                           <td>{{ service.users }}</td>
                         <td><div class="label label-success">Active</div></td>

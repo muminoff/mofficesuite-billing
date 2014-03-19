@@ -7,13 +7,12 @@
               <div class="main-panel">
                 <div class="header">
                   <div class="special-btn">
-                    <button class="btn btn-primary btn-cap" onClick='window.location.href="{% url "payment_page" %}"' ><img src="{{ STATIC_URL }}/images/payment-32-alt.png"></img> MAKE PAYMENT</button>
+                      <button class="btn btn-primary btn-cap" onClick='window.location.href="{% url "payment_page" %}"' >MAKE PAYMENT</button>
                   </div>
-                  <h3><img src="{{ STATIC_URL }}/images/bill-48.png"></img>Billing</h3>
+                  <h3><span class="icon-wallet"></span> Billing</h3>
                 </div>
-                <div class="well">
+                <div class="well-panel">
                   <div class="my-balance">
-                    <h3><img src="{{ STATIC_URL }}/images/balance-48.png"></img> Balance and Usage</h3>
                     <div class="current-balance positive">
                       <h4>Your current balance</h4>
                       <h3>$8.49</h3>
@@ -21,7 +20,7 @@
                     </div>
                   </div>
                   <div class="balance-history">
-                    <h3><img src="{{ STATIC_URL }}/images/history-48.png"></img> Billing History</h3>
+                    <h3><span class="icon-clock"></span> Billing History</h3>
                     <div class="balance-history-all">
                       <table class="table balance">
                         <thead>
@@ -37,13 +36,13 @@
                             <td>March 1, 2014</td>
                             <td>Invoice for February 2014</td>
                             <td>$4.95</td>
-                            <td><a href="#" class="btn btn-sm"><img src="{{ STATIC_URL }}/images/invoice-24.png"></img></a></td>
+                            <td><a href="#" class="btn btn-sm"><span class="icon-paperclip"></span></a></td>
                           </tr>
                           <tr>
                             <td>February 25, 2014</td>
                             <td>PayPal</td>
                             <td>-$10.00</td>
-                            <td><a href="#" class="btn btn-sm"><img src="{{ STATIC_URL }}/images/invoice-24.png"></img></a></td>
+                            <td><a href="#" class="btn btn-sm"><span class="icon-paperclip"></span></a></td>
                           </tr>
                         </tbody>
                       </table>
