@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Account, Service, Plan
+from core.models import Account, Service, Plan, ActivationToken
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -36,7 +36,7 @@ def login_page(request):
                 else:
                     return HttpResponseRedirect(reverse('services_page'))
             else:
-                context = {"form_message": {"error": "Invalid login", "message": "Disabled account", "type": "danger"}}
+                context = {"form_message": {"error": "Invalid login", "message": "Account not activated.", "type": "danger"}}
                 return render(request, 'login.html', context)
 
         else:
@@ -55,7 +55,6 @@ def logout_page(request):
 def signup_page(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('index_page'))
-
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -77,23 +76,61 @@ def signup_page(request):
             context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address.", "type": "danger"}}
             return render(request, 'signup.html', context)
             
+        #TODO
+        # Send activation token
 
         try:
             user = Account()
             user.email = email
             user.set_password(password)
+            user.is_active = False
             user.save()
+            ActivationToken.objects.create(email=email)
 
         except:
             context = {"form_message": {"error": "Signup error", "message": "Internal server error.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
         context = {"form_message": {"error": "Signup successful", "message": "Activation link sent.", "type": "success"}}
-        return render(request, 'signup.html', context)
+        return render(request, 'login.html', context)
             
 
     else:
         return render(request, 'signup.html')
+
+
+def activate_page(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('index_page'))
+
+    if request.method == "GET":
+        token = request.GET.get('token', '')
+
+        if not token:
+            return render(request, 'activate.html')
+
+        if not ActivationToken.objects.filter(token=token).count():
+            context = {"form_message": {"error": "Activation error", "message": "<h3>Invalid activation code.</h3>", "type": "danger"}}
+            return render(request, 'activate.html', context)
+
+        try:
+            this_token = ActivationToken.objects.get(token=token)
+            this_email = this_token.email
+            this_user = Account.objects.get(email=this_email)
+            this_user.is_active = True
+            this_user.save()
+            this_token.delete()
+
+        except:
+            context = {"form_message": {"error": "Activation error", "message": "<h3>Cannot activate account. Contact support team.</h3>", "type": "danger"}}
+            return render(request, 'activate.html', context)
+
+        context = {"form_message": {"error": "Activation successful", "message": "<h3>You account is now activated.</h3>", "type": "success"}}
+        return render(request, 'activate.html', context)
+
+    else:
+        return HttpResponseRedirect(reverse('login_page'))
+
 
 
 def forgot_password_page(request):

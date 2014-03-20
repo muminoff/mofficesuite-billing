@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+            <div class="row">
+              <div class="signup-form">
+                {% if form_message %}
+                 {{ form_message.message|safe }}
+                 <button type="submit" class="btn btn-{{ form_message.type }} btn-lg btn-block btn-cap" onClick='window.location.href="{% url "login_page" %}"'>LOG IN NOW</button>
+                {% else %}
+                <h3>Activate your account</h3>
+                <form class="form-horizontal" role="form" action="{% url "activate_page" %}" method="GET">
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="text" class="form-control" id="token" name="token" placeholder="Paste activation code here">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <button type="submit" class="btn btn-primary btn-lg btn-block btn-cap">ACTIVATE</button>
+                    </div>
+                  </div>
+                </form>
+                {% endif %}
+              </div>
+            </div> 
+{% endblock %}

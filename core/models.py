@@ -23,6 +23,12 @@ def generate_service_id():
         if not Service.objects.filter(pk=id).exists():
             return 'service-' + id 
 
+def generate_activation_token():
+    while True:
+        token = ''.join(random.choice(string.lowercase + string.digits) for x in range(64))
+        if not ActivationToken.objects.filter(token=token).exists():
+            return token
+
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -107,15 +113,15 @@ class Account(AbstractBaseUser):
         unique=True,
         editable=False,
     )
-    first_name = models.CharField(max_length=255, null=True)
-    last_name = models.CharField(max_length=255, null=True)
-    company_address = models.CharField(max_length=255, null=True)
-    company_name = models.CharField(max_length=255, null=True)
-    phone_number = models.CharField(max_length=255, null=True)
-    services = models.ManyToManyField(Service, null=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    company_address = models.CharField(max_length=255, null=True, blank=True)
+    company_name = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=255, null=True, blank=True)
+    services = models.ManyToManyField(Service, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    joined_date = models.DateTimeField(auto_now_add=True, editable=False)
+    joined_date = models.DateTimeField(auto_now_add=True, editable=False, null=True, blank=True)
     subscribed_to_news = models.BooleanField(default=True)
 
     objects = AccountManager()
@@ -159,3 +165,15 @@ class Account(AbstractBaseUser):
     class Meta:
         db_table = 'accounts'
 
+
+class ActivationToken(models.Model):
+    email = models.EmailField(max_length=255, primary_key=True, editable=False)
+    token = models.CharField(max_length=64, db_index=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.token = generate_activation_token()
+        super(ActivationToken, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'activation_tokens'
