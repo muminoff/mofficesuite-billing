@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 import random
 import string
-
+from decimal import Decimal
 
 def generate_account_id():
     while True:
@@ -119,6 +119,7 @@ class Account(AbstractBaseUser):
     company_name = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     services = models.ManyToManyField(Service, null=True, blank=True)
+    balance = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     joined_date = models.DateTimeField(auto_now_add=True, editable=False, null=True, blank=True)

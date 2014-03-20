@@ -166,10 +166,7 @@ def forgot_password_page(request):
 @login_required
 def services_page(request):
     current_user = Account.objects.get(email=request.user.email)
-    context = { 
-            "services": current_user.services.all(),
-            "form_message": {"error": "Settings", "message": "Logged in!", "type": "success"}
-            }
+    context = { "services": current_user.services.all() }
     return render(request, 'services.html', context)
 
 @login_required

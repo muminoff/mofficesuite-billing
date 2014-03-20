@@ -13,9 +13,9 @@
                 </div>
                 <div class="well-panel">
                   <div class="my-balance">
-                    <div class="current-balance positive">
+                    <div class="current-balance {% if request.user.balance < 1.00 %}negative{% endif %}">
                       <h4>Your current balance</h4>
-                      <h3>$8.49</h3>
+                      <h3>{{ request.user.balance }}</h3>
                       <a href="#">View this month's usage and charges</a>
                     </div>
                   </div>
