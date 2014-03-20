@@ -10,7 +10,7 @@
                 </div>
                 <div class="well-panel">
                   <div class="payment">
-                    <form class="form-horizontal" role="form" action="{% url "service_add_page" %}" method="POST">
+                    <form class="form-horizontal" role="form" action="{% url "payment_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
                           <label for="amount" class="col-md-4 control-label">Make one time PayPal payment</label>

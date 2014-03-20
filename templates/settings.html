@@ -27,28 +27,29 @@
                     </div>
                   </div>
                   <div class="contact-information">
-                      <h3><span class="icon-book-open"></span> Contact Information</h3>
-                    <form role="form" action="{% url "settings_page" %}" method="POST">
+                    <h3><span class="icon-book-open"></span> Contact Information</h3>
+                    <form class="form-horizontal" role="form" action="{% url "settings_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <label for="first">First name</label>
-                        <input type="text" class="form-control" id="first" name="first" placeholder="First name" value="{% if request.user.first_name %}{{ request.user.first_name }}{% endif %}">
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" id="first" name="first" placeholder="First name" value="{% if request.user.first_name %}{{ request.user.first_name }}{% endif %}">
+                        </div>
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" id="last" name="last" placeholder="Last name" value="{% if request.user.last_name %}{{ request.user.last_name }}{% endif %}">
+                        </div>
                       </div>
                       <div class="form-group">
-                        <label for="last">Last name</label>
-                        <input type="text" class="form-control" id="last" name="last" placeholder="Last name" value="{% if request.user.last_name %}{{ request.user.last_name }}{% endif %}">
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" id="company" name="company" placeholder="Company name" value="{% if request.user.company_name %}{{ request.user.company_name }}{% endif %}">
+                        </div>
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="{% if request.user.phone_number %}{{ request.user.phone_number }}{% endif %}">
+                        </div>
                       </div>
                       <div class="form-group">
-                        <label for="address">Company Address</label>
-                        <input type="text" class="form-control" id="address" name="address" placeholder="Company address" value="{% if request.user.company_address %}{{ request.user.company_address }}{% endif %}">
-                      </div>
-                      <div class="form-group">
-                        <label for="company">Company Name</label>
-                        <input type="text" class="form-control" id="company" name="company" placeholder="Company name" value="{% if request.user.company_name %}{{ request.user.company_name }}{% endif %}">
-                      </div>
-                      <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="{% if request.user.phone_number %}{{ request.user.phone_number }}{% endif %}">
+                        <div class="col-md-12">
+                          <input type="text" class="form-control" id="address" name="address" placeholder="Company address" value="{% if request.user.phone_number %}{{ request.user.company_address }}{% endif %}">
+                        </div>
                       </div>
                       <button type="submit" class="btn btn-success btn-lg btn-block btn-cap">SAVE CHANGES</button>
                     </form>

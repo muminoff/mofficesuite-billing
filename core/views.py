@@ -221,8 +221,9 @@ def settings_page(request):
             context = {"form_message": {"error": "Settings error", "message": str(e), "type": "danger"}}
             return render(request, 'settings.html', context)
 
-        context = {"form_message": {"error": "Settings", "message": "Settings has been updated.", "type": "success"}}
-        return render(request, 'settings.html', context)
+        # context = {"form_message": {"error": "Settings", "message": "Settings has been updated.", "type": "success"}}
+        # return render(request, 'settings.html', context)
+        return HttpResponseRedirect(reverse('settings_page'))
 
     else:
         return render(request, 'settings.html')
@@ -237,7 +238,42 @@ def payment_page(request):
 
 @login_required
 def security_page(request):
-    return render(request, 'security.html')
+    if request.method == "POST":
+
+        current_password = request.POST.get('current')
+        new_password = request.POST.get('password')
+        new_password2 = request.POST.get('password2')
+
+        if not current_password:
+            context = {"form_message": {"error": "Security error", "message": "You must enter your current password.", "type": "danger"}}
+            return render(request, 'security.html', context)
+
+        if not new_password and not new_password2:
+            context = {"form_message": {"error": "Security error", "message": "You must enter your new password.", "type": "danger"}}
+            return render(request, 'security.html', context)
+
+        if new_password != new_password2:
+            context = {"form_message": {"error": "Security error", "message": "New passwords don't match.", "type": "danger"}}
+            return render(request, 'security.html', context)
+
+        try:
+            user = authenticate(email=request.user.email, password=current_password)
+            if user is None:
+                context = {"form_message": {"error": "Security error", "message": "Invalid password", "type": "danger"}}
+                return render(request, 'security.html', context)
+
+            user.set_password(new_password)
+            user.save()
+
+        except Exception as e:
+            context = {"form_message": {"error": "Security error", "message": str(e), "type": "danger"}}
+            return render(request, 'security.html', context)
+
+        context = {"form_message": {"error": "Security error", "message": "Password changed.", "type": "success"}}
+        return render(request, 'security.html', context)
+
+    else:
+        return render(request, 'security.html')
 
 @login_required
 def notifications_page(request):
