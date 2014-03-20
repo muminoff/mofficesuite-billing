@@ -3,11 +3,13 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Account, Service, Plan, ActivationToken
+from core.models import Account, Service, Plan, ActivationToken, Invoice
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+
+from decimal import Decimal
 
 
 @login_required
@@ -193,7 +195,8 @@ def deactivate_page(request):
 
 @login_required
 def billing_page(request):
-    return render(request, 'billing.html')
+    context = { "invoices": Invoice.objects.filter(account=request.user) }
+    return render(request, 'billing.html', context)
 
 @login_required
 def settings_page(request):
@@ -231,7 +234,28 @@ def feedback_page(request):
 
 @login_required
 def payment_page(request):
-    return render(request, 'payment.html')
+    if request.method == "POST":
+
+        amount = request.POST.get('amount')
+
+        if not amount:
+            context = {"form_message": {"error": "Payment error", "message": "No amount given.", "type": "danger"}}
+            return render(request, 'payment.html', context)
+
+        try:
+            this_user = Account.objects.get(email=request.user.email)
+            this_user.balance += Decimal(amount)
+            this_user.save()
+
+        except Exception as e:
+            context = {"form_message": {"error": "Payment error", "message": str(e), "type": "danger"}}
+            return render(request, 'payment.html', context)
+
+        context = {"form_message": {"error": "Payment successful", "message": "Payment has been proceeded. Check your balance now.", "type": "success"}}
+        return render(request, 'payment.html', context)
+
+    else:
+        return render(request, 'payment.html')
 
 @login_required
 def security_page(request):
@@ -288,21 +312,21 @@ def service_add_page(request):
         if not plan:
             context = {
                     "plans": Plan.objects.all(),
-                    "form_message": {"error": "Add service error", "message": "Choose plan to add for service.", "type": "danger"}
+                    "form_message": {"error": "Add service error", "message": "No plan selected.", "type": "danger"}
                     }
             return render(request, 'service_add.html', context)
 
         if not hostname:
             context = {
                     "plans": Plan.objects.all(),
-                    "form_message": {"error": "Add service error", "message": "Provide hostname for service.", "type": "danger"}
+                    "form_message": {"error": "Add service error", "message": "No hostname given.", "type": "danger"}
                     }
             return render(request, 'service_add.html', context)
 
         if Service.objects.filter(hostname=hostname).count():
             context = {
                     "plans": Plan.objects.all(),
-                    "form_message": {"error": "Add service error", "message": "Hostname \"%s\" already taken." % hostname, "type": "danger"}
+                    "form_message": {"error": "Add service error", "message": "Hostname \"%s\" already taken. Choose another one." % hostname, "type": "danger"}
                     }
             return render(request, 'service_add.html', context)
 

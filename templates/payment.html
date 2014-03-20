@@ -16,11 +16,11 @@
                           <label for="amount" class="col-md-4 control-label">Make one time PayPal payment</label>
                           <div class="col-md-8">
                               <select class="form-control" id="amount" name="amount">
-                                <option value="10">$5 USD</option>
+                                <option value="5">$5 USD</option>
                                 <option value="10">$10 USD</option>
-                                <option value="10">$20 USD</option>
-                                <option value="10">$50 USD</option>
-                                <option value="10">$100 USD</option>
+                                <option value="20">$20 USD</option>
+                                <option value="50">$50 USD</option>
+                                <option value="100">$100 USD</option>
                               </select>
                           </div>
                       </div>
@@ -31,6 +31,12 @@
                       </div>
                     </form>
                   </div>
+                  {% if form_message %}
+                  <hr/>
+                  <div class="alert alert-{{ form_message.type }}">
+                      <p style="text-align: center">{{ form_message.message }}</p>
+                  </div>
+                  {% endif %}
                 </div>
               </div>
             </div>

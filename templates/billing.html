@@ -13,9 +13,9 @@
                 </div>
                 <div class="well-panel">
                   <div class="my-balance">
-                    <div class="current-balance {% if request.user.balance < 1.00 %}negative{% endif %}">
+                      <div class="current-balance {% if request.user.balance < 1.00 %}negative{% elif request.user.balance > 1.00 %}positive{% endif %}">
                       <h4>Your current balance</h4>
-                      <h3>{{ request.user.balance }}</h3>
+                      <h3>${{ request.user.balance }}</h3>
                       <a href="#">View this month's usage and charges</a>
                     </div>
                   </div>
@@ -32,18 +32,14 @@
                           </tr>
                         </thead>
                         <tbody>
+                          {% for invoice in invoices %}
                           <tr>
-                            <td>March 1, 2014</td>
-                            <td>Invoice for February 2014</td>
-                            <td>$4.95</td>
-                            <td><a href="#" class="btn btn-sm"><span class="icon-paperclip"></span></a></td>
+                            <td>{{ invoice.apply_date|date:"m/d/Y" }}</td>
+                            <td>{{ invoice.description }}</td>
+                            <td>${{ invoice.charged_amount }}</td>
+                            <td><a href="{{ invoice.pdf_link }}" target="_blank" class="btn btn-xs"><span class="icon-paperclip"></span></a></td>
                           </tr>
-                          <tr>
-                            <td>February 25, 2014</td>
-                            <td>PayPal</td>
-                            <td>-$10.00</td>
-                            <td><a href="#" class="btn btn-sm"><span class="icon-paperclip"></span></a></td>
-                          </tr>
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>

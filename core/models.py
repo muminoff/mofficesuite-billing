@@ -29,6 +29,12 @@ def generate_activation_token():
         if not ActivationToken.objects.filter(token=token).exists():
             return token
 
+def generate_invoice_id():
+    while True:
+        id = ''.join(random.sample(string.lowercase + string.digits, 16))
+        if not Invoice.objects.filter(pk=id).exists():
+            return 'invoice-' + id 
+
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -122,7 +128,7 @@ class Account(AbstractBaseUser):
     balance = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    joined_date = models.DateTimeField(auto_now_add=True, editable=False, null=True, blank=True)
+    joined_date = models.DateTimeField(auto_now_add=True, editable=False)
     subscribed_to_news = models.BooleanField(default=True)
 
     objects = AccountManager()
@@ -163,8 +169,27 @@ class Account(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+    def __unicode__(self):
+        return self.email
+
     class Meta:
         db_table = 'accounts'
+
+
+class Invoice(models.Model):
+    id = models.CharField(max_length=24, primary_key=True, default=generate_invoice_id, editable=False)
+    account = models.ForeignKey(Account)
+    apply_date = models.DateTimeField(auto_now_add=True, editable=False)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    charged_amount = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
+    pdf_link = models.URLField()
+
+    def __unicode__(self):
+        return '{0} - [{1}]'.format(self.account, self.apply_date.strftime('%m/%d/%Y'))
+
+    class Meta:
+        db_table = 'invoices'
+        ordering = ['-apply_date']
 
 
 class ActivationToken(models.Model):
@@ -175,6 +200,9 @@ class ActivationToken(models.Model):
     def save(self, *args, **kwargs):
         self.token = generate_activation_token()
         super(ActivationToken, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.token
 
     class Meta:
         db_table = 'activation_tokens'
