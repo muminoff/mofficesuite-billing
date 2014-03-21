@@ -173,34 +173,6 @@ def services_page(request):
     return render(request, 'services.html', context)
 
 @login_required
-def service_edit_page(request, id):
-
-    if request.method == "POST":
-        users = request.POST.get('users')
-
-        if not users:
-            context = {"form_message": {"error": "Service edit error", "message": "Users error", "type": "danger"}}
-            return render(request, 'service_edit.html', context)
-
-        try:
-            this_user = Account.objects.get(email=email)
-            #TODO
-            #Password reset mail send
-            # send_password_reset_link(email)
-
-        except Account.DoesNotExist:
-            context = {"form_message": {"error": "Password reset error", "message": "Email not found.", "type": "danger"}}
-            return render(request, 'forgot_password.html', context)
-
-
-        context = {"form_message": {"error": "Password reset successful", "message": "Password reset link sent.", "type": "success"}}
-        return render(request, 'forgot_password.html', context)
-            
-
-    else:
-        return render(request, 'forgot_password.html')
-
-@login_required
 def account_page(request):
     return render(request, 'account.html')
 
