@@ -47,6 +47,22 @@ def send_reset_password(email, password):
         pass
 
 
+def send_welcome_message(email):
+    html = get_template('mail/welcome_html.html')
+    text = get_template('mail/welcome_text.html')
+
+    msg = EmailMultiAlternatives(
+        'Welcome to Moffice Suite',
+        text, 'Moffice Suite <billing@mofficesoft.com>',
+        [email])
+    msg.attach_alternative(html, "text/html")
+
+    try:
+        msg.send(fail_silently=True)
+    except:
+        pass
+
+
 def generate_random_password(size=8):
     password = ''.join(random.choice(string.lowercase + string.digits + string.uppercase) for x in range(size))
     return password

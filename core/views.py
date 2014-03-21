@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from core.models import Account, Service, Plan, ActivationToken, Invoice
-from core.helper import send_activation_token, send_reset_password, generate_random_password
+from core.helper import send_activation_token, send_reset_password, send_welcome_message, generate_random_password
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -122,6 +122,7 @@ def activate_page(request):
             this_user.is_active = True
             this_user.save()
             this_token.delete()
+            send_welcome_message(this_email)
 
         except:
             context = {"form_message": {"error": "Activation error", "message": "<h3>Cannot activate account. Contact support team.</h3>", "type": "danger"}}
