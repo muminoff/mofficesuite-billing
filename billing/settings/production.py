@@ -29,7 +29,8 @@ ALLOWED_HOSTS = ['billing.mofficesuite.com']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = environ.get('EMAIL_HOST', 'localhost')
+# EMAIL_HOST = environ.get('EMAIL_HOST', 'localhost')
+EMAIL_HOST = environ.get('EMAIL_HOST', 'hanbiro.net')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host-password
 EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')
