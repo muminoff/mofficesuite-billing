@@ -21,7 +21,7 @@
                         <th>Status</th>
                         <th>Disk</th>
                         <th>Last Modified</th>
-                        <!-- <th style="text-align: right">Monthly charge</th> -->
+                        <th style="text-align: right">Monthly charge</th>
                         <td></td>
                       </tr>
                     </thead>
@@ -39,7 +39,7 @@
                         <td><div class="label label-success">Active</div></td>
                         <td>{{ service.disk_size }} GB</td>
                         <td>{{ service.updated_at|date:'m/d/Y H:i:s' }}</td>
-                        <!-- <td align="right">${{ service.current_bill }}</td> -->
+                        <td align="right">${{ service.current_bill }}</td>
                         <td></td>
                       </tr>
                       {% endfor %}
@@ -48,7 +48,7 @@
                     <tfoot>
                       <tr>
                         <td colspan="6"></td>
-                        <!-- <td align="right"><strong>Total ${{ request.user.get_current_state_bill }}</td> -->
+                        <td align="right"><strong>Total ${{ request.user.get_current_state_bill }}</td>
                         <td></td>
                       </tr>
                     </tfoot>

@@ -133,8 +133,6 @@ def activate_page(request):
     else:
         return HttpResponseRedirect(reverse('login_page'))
 
-
-
 def forgot_password_page(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('index_page'))
@@ -157,7 +155,7 @@ def forgot_password_page(request):
             return render(request, 'forgot_password.html', context)
 
 
-        context = {"form_message": {"error": "Password reset successful", "message": "We have sent password reset link to you.", "type": "success"}}
+        context = {"form_message": {"error": "Password reset successful", "message": "Password reset link sent.", "type": "success"}}
         return render(request, 'forgot_password.html', context)
             
 
@@ -230,7 +228,29 @@ def settings_page(request):
 
 @login_required
 def feedback_page(request):
-    return render(request, 'feedback.html')
+    if request.method == "POST":
+
+        subject = request.POST.get('subject')
+        feedback = request.POST.get('feedback')
+
+        if not subject or not feedback:
+            context = {"form_message": {"error": "Feedback error", "message": "Write subject and feedback.", "type": "danger"}}
+            return render(request, 'feedback.html', context)
+
+        #TODO
+        # send_feedback_via_mail
+        try:
+            pass
+
+        except Exception as e:
+            context = {"form_message": {"error": "Feedback error", "message": str(e), "type": "danger"}}
+            return render(request, 'settings.html', context)
+
+        context = {"form_message": {"error": "Feedback", "message": "Feedback sent. Thank you.", "type": "success"}}
+        return render(request, 'feedback.html', context)
+
+    else:
+        return render(request, 'feedback.html')
 
 @login_required
 def payment_page(request):
