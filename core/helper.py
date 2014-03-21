@@ -48,8 +48,11 @@ def send_reset_password(email, password):
 
 
 def send_welcome_message(email):
-    html = get_template('mail/welcome_html.html')
-    text = get_template('mail/welcome_text.html')
+    variables = Context({
+        'email': email
+    })
+    html = get_template('mail/welcome_html.html').render(variables)
+    text = get_template('mail/welcome_text.html').render(variables)
 
     msg = EmailMultiAlternatives(
         'Welcome to Moffice Suite',
