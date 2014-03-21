@@ -12,6 +12,11 @@
                   <h3><span class="icon-cloud"></span> Services</h3>
                 </div>
                 <div class="well-panel">
+                  {% if form_message %}
+                  <div class="alert alert-{{ form_message.type }}">
+                      <p style="text-align: center">{{ form_message.message }}</p>
+                  </div>
+                  {% endif %}
                   <table class="table services">
                     <thead>
                       <tr>
@@ -36,7 +41,7 @@
                       <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="http://{{ service.hostname }}.mofficesuite.com/" target="_blank" class="service-link"><span class="icon-attachment"></span></a></td>
                         <td>{{ service.plan }}</td>
                         <td>{{ service.users }}</td>
-                        <td><div class="label label-success">Active</div></td>
+                        <td><div class="label label-{{ service.get_status_label }}">{{ service.status }}</div></td>
                         <td>{{ service.disk_size }} GB</td>
                         <td>{{ service.updated_at|date:'m/d/Y H:i:s' }}</td>
                         <td align="right">${{ service.current_bill }}</td>

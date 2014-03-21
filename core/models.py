@@ -96,6 +96,12 @@ class Service(models.Model):
     hostname = models.CharField(max_length=255, null=False)
 
     @property
+    def get_status_label(self):
+        if self.status == "active": return "success"
+        if self.status == "standby": return "warning"
+        if self.status == "stopped": return "danger"
+
+    @property
     def disk_size(self):
         return self.users * Plan.objects.get(id=self.plan_id).capacity
 
@@ -162,6 +168,9 @@ class Account(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+    def has_balance(self):
+        return self.balance >= Decimal('1.00')
 
     @property
     def is_staff(self):

@@ -168,8 +168,7 @@ def forgot_password_page(request):
 
 @login_required
 def services_page(request):
-    current_user = Account.objects.get(email=request.user.email)
-    context = { "services": current_user.services.all() }
+    context = { "services": request.user.services.all() }
     return render(request, 'services.html', context)
 
 @login_required
@@ -360,7 +359,7 @@ def service_add_page(request):
             new_account_service.users = users
             new_account_service.ip_address = ip_address
             new_account_service.hostname = hostname
-            new_account_service.status = 'activated'
+            new_account_service.status = 'active'
             new_account_service.save()
 
             this_user.services.add(new_account_service)
@@ -372,5 +371,9 @@ def service_add_page(request):
         return HttpResponseRedirect(reverse('index_page'))
 
     else:
+        if not request.user.has_balance():
+            context = {"form_message": {"error": "Add service error", "message": "You cannot add service if your balance is below $1.", "type": "danger"} }
+            return render(request, 'services.html', context)
+
         context = { "plans": Plan.objects.all()}
         return render(request, 'service_add.html', context)
