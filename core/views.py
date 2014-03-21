@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from core.models import Account, Service, Plan, ActivationToken, Invoice
-from core.helper import send_activation_token, send_reset_password, send_welcome_message, generate_random_password
+from core.helper import send_activation_token, send_reset_password, send_welcome_message, send_feedback, generate_random_password
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -240,14 +240,13 @@ def feedback_page(request):
             context = {"form_message": {"error": "Feedback error", "message": "Write subject and feedback.", "type": "danger"}}
             return render(request, 'feedback.html', context)
 
-        #TODO
-        # send_feedback_via_mail
         try:
-            pass
+            this_user = Account.objects.get(email=request.user.email)
+            send_feedback(this_user, subject, feedback)
 
         except Exception as e:
             context = {"form_message": {"error": "Feedback error", "message": str(e), "type": "danger"}}
-            return render(request, 'settings.html', context)
+            return render(request, 'feedback.html', context)
 
         context = {"form_message": {"error": "Feedback", "message": "Feedback sent. Thank you.", "type": "success"}}
         return render(request, 'feedback.html', context)
