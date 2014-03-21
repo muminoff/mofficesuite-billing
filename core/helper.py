@@ -1,11 +1,14 @@
 from django.http import HttpResponse
-from django.utils import simplejson as json
 from django.template.loader import render_to_string, get_template
 from django.template import Context
 from django.core.mail import EmailMultiAlternatives
 
+import random
+import string
+import json
 
-def sendEmailToken(request, token):
+
+def send_activation_token(request, token):
     variables = Context({
         'request': request,
         'token': token,
@@ -14,7 +17,7 @@ def sendEmailToken(request, token):
     text = get_template('mail/token_text.html').render(variables)
 
     msg = EmailMultiAlternatives(
-        'Moffice Suite activation link',
+        'Moffice Suite Activation Link',
         text, 'Moffice Suite Billing <billing@mofficesoft.com>',
         [token.email])
     msg.attach_alternative(html, "text/html")
@@ -25,9 +28,25 @@ def sendEmailToken(request, token):
         pass
 
 
-def render_json(data_dict):
-    return HttpResponse(json.dumps(data_dict), 'application/javascript')
+def send_reset_password(email, password):
+    variables = Context({
+        'password': password
+    })
+    html = get_template('mail/password_html.html').render(variables)
+    text = get_template('mail/password_text.html').render(variables)
+
+    msg = EmailMultiAlternatives(
+        'Moffice Suite Reset Password',
+        text, 'Moffice Suite Billing <billing@mofficesoft.com>',
+        [email])
+    msg.attach_alternative(html, "text/html")
+
+    try:
+        msg.send(fail_silently=True)
+    except:
+        pass
 
 
-def render_template_json(template, context):
-    return HttpResponse(render_to_string(template, context), 'application/javascript')
+def generate_random_password(size=8):
+    password = ''.join(random.choice(string.lowercase + string.digits + string.uppercase) for x in range(size))
+    return password

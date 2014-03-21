@@ -1,0 +1,5 @@
+<h1>Moffice Suite Activation Link</h1>
+<p>Goto http://{{ request.get_host }}{% url "activate_page" %}</p>
+<p>Activation code: {{ token.token }}</p>
+<br/>
+<p>or just click this link http://{{ request.get_host }}{% url "activate_page" %}?token={{ token.token }}</p>

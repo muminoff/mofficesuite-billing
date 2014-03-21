@@ -206,3 +206,5 @@ class ActivationToken(models.Model):
 
     class Meta:
         db_table = 'activation_tokens'
+
+

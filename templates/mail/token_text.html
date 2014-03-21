@@ -1,0 +1,4 @@
+
+Goto http://{{ request.get_host }}{% url "activate_page" %}
+Activation code: {{ token.token }}
+or just click this link http://{{ request.get_host }}{% url "activate_page" %}?token={{ token.token }}

@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from core.models import Account, Service, Plan, ActivationToken, Invoice
+from core.helper import send_activation_token, send_reset_password, generate_random_password
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -78,19 +79,18 @@ def signup_page(request):
             context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address.", "type": "danger"}}
             return render(request, 'signup.html', context)
             
-        #TODO
-        # Send activation token
-
         try:
             user = Account()
             user.email = email
             user.set_password(password)
             user.is_active = False
             user.save()
-            ActivationToken.objects.create(email=email)
+            token = ActivationToken(email=email)
+            token.save()
+            send_activation_token(request, token)
 
-        except:
-            context = {"form_message": {"error": "Signup error", "message": "Internal server error.", "type": "danger"}}
+        except Exception as e:
+            context = {"form_message": {"error": "Signup error", "message": "Cannot activate account. Contact support team.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
         context = {"form_message": {"error": "Signup successful", "message": "Activation link sent.", "type": "success"}}
@@ -127,11 +127,12 @@ def activate_page(request):
             context = {"form_message": {"error": "Activation error", "message": "<h3>Cannot activate account. Contact support team.</h3>", "type": "danger"}}
             return render(request, 'activate.html', context)
 
-        context = {"form_message": {"error": "Activation successful", "message": "<h3>You account is now activated.</h3>", "type": "success"}}
+        context = {"form_message": {"error": "Activation successful", "message": "<h3>Account activated. You can now login.</h3>", "type": "success"}}
         return render(request, 'activate.html', context)
 
     else:
         return HttpResponseRedirect(reverse('login_page'))
+
 
 def forgot_password_page(request):
     if request.user.is_authenticated():
@@ -143,6 +144,42 @@ def forgot_password_page(request):
         if not email:
             context = {"form_message": {"error": "Password reset error", "message": "Give us your email address", "type": "danger"}}
             return render(request, 'forgot_password.html', context)
+
+        try:
+            this_user = Account.objects.get(email=email)
+            new_password = generate_random_password()
+            this_user.set_password(new_password)
+            this_user.save()
+            send_reset_password(email, new_password)
+
+        except Account.DoesNotExist:
+            context = {"form_message": {"error": "Password reset error", "message": "Email not found.", "type": "danger"}}
+            return render(request, 'forgot_password.html', context)
+
+
+        context = {"form_message": {"error": "Password reset successful", "message": "Temporary password sent.", "type": "success"}}
+        return render(request, 'forgot_password.html', context)
+            
+
+    else:
+        return render(request, 'forgot_password.html')
+
+
+@login_required
+def services_page(request):
+    current_user = Account.objects.get(email=request.user.email)
+    context = { "services": current_user.services.all() }
+    return render(request, 'services.html', context)
+
+@login_required
+def service_edit_page(request, id):
+
+    if request.method == "POST":
+        users = request.POST.get('users')
+
+        if not users:
+            context = {"form_message": {"error": "Service edit error", "message": "Users error", "type": "danger"}}
+            return render(request, 'service_edit.html', context)
 
         try:
             this_user = Account.objects.get(email=email)
@@ -161,13 +198,6 @@ def forgot_password_page(request):
 
     else:
         return render(request, 'forgot_password.html')
-
-
-@login_required
-def services_page(request):
-    current_user = Account.objects.get(email=request.user.email)
-    context = { "services": current_user.services.all() }
-    return render(request, 'services.html', context)
 
 @login_required
 def account_page(request):
@@ -372,7 +402,3 @@ def service_add_page(request):
     else:
         context = { "plans": Plan.objects.all()}
         return render(request, 'service_add.html', context)
-
-@login_required
-def ticket_add_page(request):
-    return render(request, 'ticket_add.html')
