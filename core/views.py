@@ -380,20 +380,4 @@ def service_add_page(request):
 
 
 def invoice_page(request):
-    from django.template import Context
-    from webodt.converters import converter
-    import webodt
-    template = webodt.ODFTemplate('invoice.odt')
-    context = dict(
-            user=request.user.email,
-            balance=request.user.balance,
-            invoice_number=125123,
-            total_charged=request.user.balance,
-            services=request.user.services.all(),
-            )
-    document = template.render(Context(context))
-    conv = converter()
-    pdf = conv.convert(document, format='pdf')
-    response = HttpResponse(pdf, mimetype='application/pdf')
-    response['Content-Disposition'] = 'inline;filename=invoice-[%s].pdf' % (request.user.email)
-    return response
+    return HttpResponse('this is invoice page')
