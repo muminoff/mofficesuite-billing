@@ -1,8 +1,3 @@
-<!-- 
-This is intended to be rendered to a PDF using pisa, not in a browser.
-Therefore, the HTML and CSS here can look a bit fishy. Please refer to 
-http://www.htmltopdf.org/doc/pisa-en.html for reference 
--->
 <html>
 <style>
 /*Custom fonts*/
@@ -20,82 +15,119 @@ http://www.htmltopdf.org/doc/pisa-en.html for reference
 }*/
 /* Page layout */
 @page {
-    @frame {
-        -pdf-frame-content: address_sender;
-        /*-pdf-frame-border: 1;*/
-        right: 4cm;
-        width: 5cm;
-        top: 4cm;
-        height: 3cm;
-    }
-    @frame {
-        -pdf-frame-content: address_receiver;
-        /*-pdf-frame-border: 1;*/
-        left: 2cm;
-        width: 5cm;
-        top: 4cm;
-        height: 3cm;
-    }
-    @frame {
-        -pdf-frame-content: main_text;
-        /*-pdf-frame-border: 1;*/
-        right: 2cm;
-        left: 2cm;
-        top: 7cm;
-        bottom: 5cm;
-    }
-    @frame {
-        -pdf-frame-content: signature_left;
-        /*-pdf-frame-border: 1;*/
-        left: 2cm;
-        width: 5cm;
-        bottom: 1cm;
-        height: 3cm;
-    }
+  size: letter portrait;
+  @frame header_frame {
+    -pdf-frame-content: header_content;
+    left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+  }
+  @frame content_frame {
+    left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+  }
+  @frame footer_frame {
+    -pdf-frame-content: footer_content;
+    left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+  }
 }
 
-h1, h2, h3, h4 { /* Don't add an outline to the document */
-    -pdf-outline: false;
+h1 {
+  font-size: 32px;
 }
 
-.border {
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    
-    border-top-style: solid;
-    border-bottom-style: solid;
-    border-left-style: solid;
-    border-right-style: solid;
+table.sardor thead {
+  background-color: #c5c5c5;
 }
 
+table.sardor thead th {
+  padding: 4px;
+  border: 0.4px solid #555;
+  font-size: 18px;
+  font-family: "Arial", sans-serif;
+  vertical-align: middle;
+  border-left: none;
+  border-right: none;
+}
 
+table.sardor tbody td {
+  height: 14px;
+  line-height: 14px;
+  padding: 4px;
+  border: 0.4px solid #555;
+  font-size: 16px;
+  border-left: none;
+  border-right: none;
+}
+
+p {
+  padding: -4px;
+}
+
+table.sardor tfoot td {
+  padding-top: 14px;
+  border: 0.4px solid #555;
+  font-size: 20px;
+  border: none;
+  font-weight: bold;
+}
+
+.address {
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.invoice {
+  margin-top: 20px;
+  float: right;
+  font-size: 12px;
+  line-height: 12px;
+}
 </style>
 <body>
-<div id="address_sender" class="compact">
-    Test Inc.<br />
-    Test street 1<br />
-    CH-8022 Zürich<br />
-    Whatever<br />
-</div>
-<div id="address_receiver" class="compact">
-    Line 1<br />
-    Line 2<br />
-    Line 3<br />
-    Line 4<br />
-</div>
-<div id="main_text">
-    <h1>Document title</h1>
-    <div>
-        <h3> Whatever </h3>
-        <!-- cannot make borders span several p tags.... -->
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium dignissim eros, posuere venenatis purus varius vitae. Suspendisse quis elit ligula. Cras vulputate metus vitae lectus iaculis nec adipiscing est fermentum. Praesent ac urna ante. Cras semper malesuada sapien at consectetur. Vivamus arcu sapien, dignissim sit amet mollis quis, scelerisque nec nibh. In hac habitasse platea dictumst. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam rutrum interdum felis, quis suscipit justo malesuada at. Mauris luctus justo id nulla placerat et pharetra mi interdum. Mauris rhoncus augue eu tortor luctus convallis. Nulla facilisi. Morbi ut arcu enim. Nullam in leo arcu, sed ultrices felis. Etiam scelerisque rhoncus ultrices. Nulla in elit ut dolor luctus semper. In eleifend consectetur eros, et pellentesque nulla vehicula non. Nam nec lorem ut dui pellentesque dapibus. Etiam condimentum vulputate lectus.</p>
-    </div>
-</div>
-<div id="signature_left">
-  <h1>Bill To</h1>
-  <p>hanbiro@hanbiro.com</p>
-</div>
+  <div id="header_content">
+    <h1>Moffice Suite</h1>
+  </div>
+  <div class="address">
+    <p>MofficeSoft, Inc. US Headquarters</p>
+    <p>2115 Linwood Ave. 5th Fl.</p>
+    <p>Fort Lee, NJ 07024</p>
+  </div>
+  <div class="invoice">
+    <p>Current month</p>
+    <p>Invoice Number: {{ invoice_number }}</p>
+  </div>
+  <div id="content_frame">
+    <table class="sardor">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Plan</th>
+          <th>Days</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>USD</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+        <tr>
+          <td>{{ service.hostname }}</td>
+          <td>{{ service.plan }}</td>
+          <td>12</td>
+          <td>03/01/2014</td>
+          <td>03/13/2014</td>
+          <td>${{ user.balance }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6" align="right">Total: ${{ user.balance }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <br/>
+  <div class="footer_content">
+    <h2>Bill To: {{ user.email }}</h2>
+  </div>
 </body>
 </html>

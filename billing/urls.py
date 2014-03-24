@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^notifications/$', 'core.views.notifications_page', name='notifications_page'),
     url(r'^deactivate/$', 'core.views.deactivate_page', name='deactivate_page'),
     url(r'^invoice/$', 'core.views.invoice_page', name='invoice_page'),
+    url(r'^pdf/$', 'core.views.pdf_page', name='pdf_page'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

@@ -52,7 +52,7 @@ CACHES = {
 INSTALLED_APPS += (
     # 'debug_toolbar',
     'core',
-    'webodt',
+    'django_weasyprint',
 )
 
 MIDDLEWARE_CLASSES += (

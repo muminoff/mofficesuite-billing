@@ -380,4 +380,16 @@ def service_add_page(request):
 
 
 def invoice_page(request):
-    return HttpResponse('this is invoice page')
+    from django_xhtml2pdf.utils import generate_pdf
+    resp = HttpResponse(content_type='application/pdf')
+    context = {
+            "user": request.user,
+            "invoice_number": 124124,
+            "services": request.user.services.all()
+            }
+    result = generate_pdf('invoice.html', file_object=resp, context=context)
+    return result
+
+def pdf_page(request):
+    from django_weasyprint import PDFTemplateResponse
+    pass
