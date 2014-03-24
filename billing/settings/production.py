@@ -84,3 +84,5 @@ INSTALLED_APPS += ( 'core',)
 AUTH_USER_MODEL = 'core.Account'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
+WEBODT_CONVERTER = 'webodt.converters.abiword.AbiwordODFConverter'
+WEBODT_TEMPLATE_PATH = SITE_ROOT + '/templates/'
