@@ -16,7 +16,7 @@
                       <div class="current-balance {% if request.user.balance < 1.00 %}negative{% elif request.user.balance > 1.00 %}positive{% endif %}">
                       <h4>Your current balance</h4>
                       <h3>${{ request.user.balance }}</h3>
-                      <a href="#">View this month's usage and charges</a>
+                      <a href="{% url "invoice_page" %}" target="_blank">View this month's usage and charges</a>
                     </div>
                   </div>
                   <div class="balance-history">

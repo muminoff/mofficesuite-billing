@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^security/$', 'core.views.security_page', name='security_page'),
     url(r'^notifications/$', 'core.views.notifications_page', name='notifications_page'),
     url(r'^deactivate/$', 'core.views.deactivate_page', name='deactivate_page'),
+    url(r'^invoice/$', 'core.views.invoice_page', name='invoice_page'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

@@ -50,12 +50,13 @@ CACHES = {
 ########## TOOLBAR CONFIGURATION
 # See: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup
 INSTALLED_APPS += (
-    'debug_toolbar',
+    # 'debug_toolbar',
     'core',
+    'webodt',
 )
 
 MIDDLEWARE_CLASSES += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -66,3 +67,6 @@ INTERNAL_IPS = ('127.0.0.1',)
 AUTH_USER_MODEL = 'core.Account'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
+
+WEBODT_CONVERTER = 'webodt.converters.abiword.AbiwordODFConverter'
+WEBODT_TEMPLATE_PATH = SITE_ROOT + '/templates/'
