@@ -3,8 +3,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Account, Service, Plan, ActivationToken, Invoice
-from core.helper import send_activation_token, send_reset_password, send_welcome_message, send_feedback, generate_random_password
+from core.models import Account, Service, Plan, ActivationToken, ResetToken, Invoice, Notification
+from core.helper import send_activation_token, send_reset_token, send_welcome_message, send_feedback, generate_random_password
 
 from django.db import IntegrityError
 from django.core.validators import validate_email
@@ -31,12 +31,18 @@ def login_page(request):
 
         user = authenticate(email=email, password=password)
         if user is not None:
+
             if user.is_active:
                 login(request, user)
                 next_page = request.POST.get('next')
                 if next_page:
                     return HttpResponseRedirect(next_page)
                 else:
+                    if request.user.is_staff:
+                        logout(request)
+                        context = {"form_message": {"error": "Invalid login", "message": "Admins not allowed :)", "type": "info"}}
+                        return render(request, 'login.html', context)
+
                     return HttpResponseRedirect(reverse('services_page'))
             else:
                 context = {"form_message": {"error": "Invalid login", "message": "Account not activated.", "type": "danger"}}
@@ -71,7 +77,6 @@ def signup_page(request):
             context = {"form_message": {"error": "Signup error", "message": "All fields required.", "type": "danger"}}
             return render(request, 'signup.html', context)
 
-
         try:
             validate_email(email)
 
@@ -85,9 +90,11 @@ def signup_page(request):
             user.set_password(password)
             user.is_active = False
             user.save()
+            Notification.objects.create(account=user, description="Account created.")
             token = ActivationToken(email=email)
             token.save()
             send_activation_token(request, token)
+            Notification.objects.create(account=user, description="Activation code sent.")
 
         except Exception as e:
             context = {"form_message": {"error": "Signup error", "message": "Cannot activate account. Contact support team.", "type": "danger"}}
@@ -122,6 +129,7 @@ def activate_page(request):
             this_user.is_active = True
             this_user.save()
             this_token.delete()
+            Notification.objects.create(account=this_user, description="Account activated.", status="success")
             send_welcome_message(this_email)
 
         except:
@@ -147,18 +155,21 @@ def forgot_password_page(request):
             return render(request, 'forgot_password.html', context)
 
         try:
-            this_user = Account.objects.get(email=email)
-            new_password = generate_random_password()
-            this_user.set_password(new_password)
-            this_user.save()
-            send_reset_password(email, new_password)
+            token = ResetToken.objects.create(email=email)
+            send_reset_token(request, token)
+            this_account = Account.objects.get(email=email)
+            Notification.objects.create(account=this_account, description="Password reset link set.", status="warning")
 
         except Account.DoesNotExist:
             context = {"form_message": {"error": "Password reset error", "message": "Email not found.", "type": "danger"}}
             return render(request, 'forgot_password.html', context)
 
+        except Exception as e:
+            context = {"form_message": {"error": "Password reset error", "message": "Cannot reset this account. Contact support team.", "type": "danger"}}
+            return render(request, 'forgot_password.html', context)
 
-        context = {"form_message": {"error": "Password reset successful", "message": "Temporary password sent.", "type": "success"}}
+
+        context = {"form_message": {"error": "Password reset link sent", "message": "Password reset link sent.", "type": "success"}}
         return render(request, 'forgot_password.html', context)
             
 
@@ -166,9 +177,64 @@ def forgot_password_page(request):
         return render(request, 'forgot_password.html')
 
 
+def reset_page(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('index_page'))
+
+    if request.method == "GET":
+        token = request.GET.get('token', '')
+
+        if not token:
+            return HttpResponseRedirect(reverse('login_page'))
+
+        if not ResetToken.objects.filter(token=token).count():
+            context = {"form_message": {"error": "Password reset error", "message": "Password reset link expired.", "type": "danger"}}
+            return render(request, 'login.html', context)
+
+        context = { "token": ResetToken.objects.get(token=token) }
+        return render(request, 'reset.html', context)
+
+    elif request.method == "POST":
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        token = request.POST.get('token')
+
+        if not token:
+            return HttpResponseRedirect(reverse('login_page'))
+
+        if not ResetToken.objects.filter(token=token).count():
+            context = {"form_message": {"error": "Password reset error", "message": "Password reset link expired.", "type": "danger"}}
+            return render(request, 'login.html', context)
+
+        if password != password2:
+            context = {"form_message": {"error": "Password reset error", "message": "Passwords don't match.", "type": "danger"}}
+            return render(request, 'reset.html', context)
+
+        if not password or not password2:
+            context = {"form_message": {"error": "Password reset error", "message": "All fields are required.", "type": "danger"}}
+            return render(request, 'reset.html', context)
+
+        try:
+            this_token = ResetToken.objects.get(token=token)
+            this_email = this_token.email
+            this_account = Account.objects.get(email=this_email)
+            this_account.set_password(password2)
+            this_account.save()
+            this_token.delete()
+            Notification.objects.create(account=this_account, description="Password reset by request.", status="success")
+
+        except:
+            context = {"form_message": {"error": "Password reset error", "message": "Cannot reset this account. Contact support team.", "type": "danger"}}
+            return render(request, 'reset.html', context)
+
+        context = {"form_message": {"error": "Password reset successful", "message": "New password applied. You can now login.", "type": "success"}}
+        return render(request, 'login.html', context)
+
+
+
 @login_required
 def services_page(request):
-    context = { "services": request.user.services.all() }
+    context = { "services": Service.objects.filter(account=request.user) }
     return render(request, 'services.html', context)
 
 @login_required
@@ -267,6 +333,7 @@ def payment_page(request):
             this_user = Account.objects.get(email=request.user.email)
             this_user.balance += Decimal(amount)
             this_user.save()
+            Notification.objects.create(account=this_user, description="$%s USD payment proceeded." % str(Decimal(amount)), status="success")
 
         except Exception as e:
             context = {"form_message": {"error": "Payment error", "message": str(e), "type": "danger"}}
@@ -317,9 +384,12 @@ def security_page(request):
     else:
         return render(request, 'security.html')
 
+
 @login_required
 def notifications_page(request):
-    return render(request, 'notifications.html')
+    context = { "notifications": Notification.objects.filter(account=request.user)[:5] }
+    return render(request, 'notifications.html', context)
+
 
 @login_required
 def service_add_page(request):
@@ -327,7 +397,6 @@ def service_add_page(request):
 
         plan = request.POST.get('plan')
         users = request.POST.get('users')
-        ip_address = request.POST.get('ip-address')
         hostname = request.POST.get('hostname')
 
         if not plan:
@@ -354,15 +423,15 @@ def service_add_page(request):
         try:
             this_user = Account.objects.get(id=request.user.id)
             chosen_base_plan = Plan.objects.get(id=plan)
-            new_account_service = Service()
-            new_account_service.plan = chosen_base_plan
-            new_account_service.users = users
-            new_account_service.ip_address = ip_address
-            new_account_service.hostname = hostname
-            new_account_service.status = 'active'
-            new_account_service.save()
+            new_service = Service()
+            new_service.account = this_user
+            new_service.plan = chosen_base_plan
+            new_service.users = users
+            new_service.hostname = hostname
+            new_service.status = 'active'
+            new_service.save()
 
-            this_user.services.add(new_account_service)
+            Notification.objects.create(account=this_user, description="New service (%s plan) added." % new_service.plan, status="info")
 
         except Exception as e:
             context = {"form_message": {"error": "Add service error", "message": str(e), "type": "danger"}}
@@ -385,11 +454,7 @@ def invoice_page(request):
     context = {
             "user": request.user,
             "invoice_number": 124124,
-            "services": request.user.services.all()
+            "services": Service.objects.filter(account=request.user)
             }
     result = generate_pdf('invoice.html', file_object=resp, context=context)
     return result
-
-def pdf_page(request):
-    from django_weasyprint import PDFTemplateResponse
-    pass

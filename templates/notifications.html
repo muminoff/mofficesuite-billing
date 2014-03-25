@@ -6,12 +6,19 @@
             <div class="col-md-9">
               <div class="main-panel">
                 <div class="header">
-                  <h3><span class="icon-megaphone"></span> Notifications</h3>
+                    <h3><span class="icon-megaphone"></span> Notifications <small>(Last 5)</small></h3>
                 </div>
                 <div class="well-panel">
-                  <div class="alert alert-info fade in">
-                    <p>No notifications.</p>
+                {% for notification in notifications  %}
+                  <div class="alert alert-{{ notification.status }}">
+                      <p><span class="icon-{{ notification.get_status_icon }}"></span> {{ notification.created_at|date:"d/m/Y H:i:s" }} - {{ notification.description|safe }}</p>
                   </div>
+                {% endfor %}
+                {% if not notifications  %}
+                  <div class="alert alert-info fade in">
+                    <p>No notifications for now.</p>
+                  </div>
+                {% endif %}
                 </div>
               </div>
             </div>

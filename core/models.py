@@ -5,43 +5,72 @@ import random
 import string
 from decimal import Decimal
 
+from django.contrib.sessions.models import Session
+from django.contrib.sites.models import Site
+from django.contrib.admin.models import LogEntry
+from django.contrib.contenttypes.models import ContentType
+Session._meta.db_table = 'sessions'
+Site._meta.db_table = 'sites'
+LogEntry._meta.db_table = 'admin_log'
+ContentType._meta.db_table = 'content_types'
+
+
 def generate_account_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
         if not Account.objects.filter(pk=id).exists():
-            return 'account-' + id 
+            return 'account-' + id
+
 
 def generate_plan_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
         if not Plan.objects.filter(pk=id).exists():
-            return 'plan-' + id 
+            return 'plan-' + id
+
 
 def generate_service_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
         if not Service.objects.filter(pk=id).exists():
-            return 'service-' + id 
+            return 'service-' + id
+
 
 def generate_activation_token():
     while True:
-        token = ''.join(random.choice(string.lowercase + string.digits) for x in range(64))
+        token = ''.join(random.choice(
+            string.lowercase +
+            string.digits
+            ) for x in range(64))
         if not ActivationToken.objects.filter(token=token).exists():
             return token
+
+
+def generate_reset_token():
+    while True:
+        token = ''.join(random.choice(
+            string.lowercase +
+            string.digits) for x in range(64))
+        if not ResetToken.objects.filter(token=token).exists():
+            return token
+
 
 def generate_invoice_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
         if not Invoice.objects.filter(pk=id).exists():
-            return 'invoice-' + id 
+            return 'invoice-' + id
+
+
+def generate_notification_id():
+    while True:
+        id = ''.join(random.sample(string.lowercase + string.digits, 16))
+        if not Notification.objects.filter(pk=id).exists():
+            return 'notification-' + id
 
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None):
-        """
-        Creates and saves a User with the given email, date of
-        birth and password.
-        """
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -54,9 +83,6 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password):
-        """
-        Creates and saves a superuser with the given email, date of
-        birth and password.  """
         user = self.create_user(email, password=password,)
         user.is_admin = True
         user.save(using=self._db)
@@ -77,46 +103,6 @@ class Plan(models.Model):
         db_table = 'plans'
 
 
-class Service(models.Model):
-    STATE_ACTIVE = 'active' #RUN
-    STATE_STANDBY = 'standby'#PAUSE
-    STATE_STOPPED = 'stopped'#STOP
-    STATE_CHOICES = (
-            (STATE_ACTIVE, 'active'),
-            (STATE_STANDBY, 'standby'),
-            (STATE_STOPPED, 'stopped'),
-            )
-    id = models.CharField(max_length=24, primary_key=True, default=generate_service_id, editable=False)
-    plan = models.ForeignKey(Plan)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=10, choices=STATE_CHOICES, default=STATE_ACTIVE)
-    ip_address = models.IPAddressField()
-    users = models.PositiveIntegerField()
-    hostname = models.CharField(max_length=255, null=False)
-
-    @property
-    def get_status_label(self):
-        if self.status == "active": return "success"
-        if self.status == "standby": return "warning"
-        if self.status == "stopped": return "danger"
-
-    @property
-    def disk_size(self):
-        return self.users * Plan.objects.get(id=self.plan_id).capacity
-
-    @property
-    def current_bill(self):
-        import decimal
-        return self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
-
-    def __unicode__(self):
-        return self.hostname
-
-    class Meta:
-        db_table = 'services'
-
-
 class Account(AbstractBaseUser):
     id = models.CharField(max_length=24, primary_key=True, default=generate_account_id, editable=False)
     email = models.EmailField(
@@ -130,7 +116,6 @@ class Account(AbstractBaseUser):
     company_address = models.CharField(max_length=255, null=True, blank=True)
     company_name = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
-    services = models.ManyToManyField(Service, null=True, blank=True)
     balance = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -160,13 +145,9 @@ class Account(AbstractBaseUser):
         return self.email
 
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
         return True
 
     def has_balance(self):
@@ -174,8 +155,6 @@ class Account(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
         return self.is_admin
 
     def __unicode__(self):
@@ -183,6 +162,46 @@ class Account(AbstractBaseUser):
 
     class Meta:
         db_table = 'accounts'
+
+
+class Service(models.Model):
+    STATE_ACTIVE = 'active'
+    STATE_STANDBY = 'standby'
+    STATE_STOPPED = 'stopped'
+    STATE_CHOICES = (
+            (STATE_ACTIVE, 'active'),
+            (STATE_STANDBY, 'standby'),
+            (STATE_STOPPED, 'stopped'),
+            )
+    id = models.CharField(max_length=24, primary_key=True, default=generate_service_id, editable=False)
+    hostname = models.CharField(max_length=255, null=False)
+    plan = models.ForeignKey(Plan)
+    users = models.PositiveIntegerField()
+    account = models.ForeignKey(Account)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=10, choices=STATE_CHOICES, default=STATE_ACTIVE)
+
+    @property
+    def get_status_label(self):
+        if self.status == "active": return "success"
+        if self.status == "standby": return "warning"
+        if self.status == "stopped": return "danger"
+
+    @property
+    def disk_size(self):
+        return self.users * Plan.objects.get(id=self.plan_id).capacity
+
+    @property
+    def current_bill(self):
+        import decimal
+        return self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
+
+    def __unicode__(self):
+        return self.hostname
+
+    class Meta:
+        db_table = 'services'
 
 
 class Invoice(models.Model):
@@ -201,6 +220,39 @@ class Invoice(models.Model):
         ordering = ['-apply_date']
 
 
+class Notification(models.Model):
+    SUCCESS = 'success'
+    WARNING = 'warning'
+    INFO = 'info'
+    DANGER = 'danger'
+    STATE_CHOICES = (
+            (SUCCESS, 'success'),
+            (WARNING, 'warning'),
+            (INFO, 'info'),
+            (DANGER, 'danger'),
+            )
+    id = models.CharField(max_length=32, primary_key=True, default=generate_notification_id, editable=False)
+    account = models.ForeignKey(Account)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    description = models.TextField(null=True, blank=True)
+    viewed = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATE_CHOICES, default=INFO)
+
+    @property
+    def get_status_icon(self):
+        if self.status == "success": return "happy"
+        if self.status == "warning": return "sad"
+        if self.status == "info": return "hourglass"
+        if self.status == "danger": return "alarmclock"
+
+    def __unicode__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'notifications'
+        ordering = ['account', '-created_at']
+
+
 class ActivationToken(models.Model):
     email = models.EmailField(max_length=255, primary_key=True, editable=False)
     token = models.CharField(max_length=64, db_index=True)
@@ -217,3 +269,17 @@ class ActivationToken(models.Model):
         db_table = 'activation_tokens'
 
 
+class ResetToken(models.Model):
+    email = models.EmailField(max_length=255, primary_key=True, editable=False)
+    token = models.CharField(max_length=64, db_index=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.token = generate_activation_token()
+        super(ResetToken, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.token
+
+    class Meta:
+        db_table = 'reset_tokens'

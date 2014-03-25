@@ -28,17 +28,18 @@ def send_activation_token(request, token):
         pass
 
 
-def send_reset_password(email, password):
+def send_reset_token(request, token):
     variables = Context({
-        'password': password
+        'request': request,
+        'token': token,
     })
-    html = get_template('mail/password_html.html').render(variables)
-    text = get_template('mail/password_text.html').render(variables)
+    html = get_template('mail/reset_html.html').render(variables)
+    text = get_template('mail/reset_text.html').render(variables)
 
     msg = EmailMultiAlternatives(
-        'Moffice Suite Reset Password',
+        'Moffice Suite Reset Password Link',
         text, 'Moffice Suite Billing <billing@mofficesoft.com>',
-        [email])
+        [token.email])
     msg.attach_alternative(html, "text/html")
 
     try:

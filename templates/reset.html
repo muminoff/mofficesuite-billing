@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+            <div class="row">
+              <div class="signup-form">
+                <h3>Moffice Suite Reset Password</h3>
+                <form class="form-horizontal" role="form" action="{% url "reset_page" %}" method="POST">
+                  {% csrf_token %}
+                  {% if token %}
+                  <input type="hidden" id="token" name="token" value="{{ token.token }}">
+                  {% endif %}
+                  <label>Password reset for {{ token.email }}</label>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="password" class="form-control" id="password" name="password" placeholder="New password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <button type="submit" class="btn btn-primary btn-lg btn-block btn-cap">SET NEW PASSWORD</button>
+                    </div>
+                  </div>
+                </form>
+                {% if form_message %}
+                <div class="alert alert-{{ form_message.type }}">
+                  <p style="text-align: center">{{ form_message.message|safe }}</p>
+                </div>
+                {% endif %}
+              </div>
+            </div> 
+{% endblock %}
