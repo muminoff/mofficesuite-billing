@@ -22,8 +22,8 @@
                   </div>
                 </form>
                 {% if form_message %}
-                <div class="alert alert-{{ form_message.type }}">
-                  <p style="text-align: center">{{ form_message.message }}</p>
+                <div class="alert alert-{{ form_message.type }} {{ form_message.animation }}">
+                    <p style="text-align: center">{{ form_message.title|safe }}: {{ form_message.message|safe }}</p>
                 </div>
                 {% endif %}
                 <div class="accept-div">

@@ -29,14 +29,14 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% if not services %}
+                      {% if not request.user.service_set %}
                       <tr class="warning">
                         <td colspan="7">You don't have services yet. For adding service, click above button to proceed.</td>
                       </tr>
                       {% endif %}
-                      {% for service in services %}
+                      {% for service in request.user.service_set.all %}
                       <tr>
-                      <td class="service-item"><a href="#">{{ service.hostname }}</a> <a href="http://{{ service.hostname }}.mofficesuite.com/" target="_blank" class="service-link"><span class="icon-attachment"></span></a></td>
+                          <td class="service-item"><a href="{% url "service_edit_page" service.hostname %}">{{ service.hostname }}</a> <a href="http://{{ service.hostname }}.mofficesuite.com/" target="_blank" class="service-link"><span class="icon-attachment"></span></a></td>
                         <td>{{ service.plan }}</td>
                         <td>{{ service.users }}</td>
                         <td><div class="label label-{{ service.get_status_label }}">{{ service.status }}</div></td>

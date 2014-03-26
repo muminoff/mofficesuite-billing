@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Add service{% endblock %}
+{% block content %}
+          <div class="col-md-12">
+            {% include "sidebar.html" %}
+            <div class="col-md-9">
+              <div class="main-panel">
+                <div class="header">
+                  <h3><span class="icon-gift"></span> {{ service.hostname }}.mofficesuite.com ({{ service.plan }} plan)</h3>
+                </div>
+                <div class="well-panel">
+                  {% if form_message %}
+                  <div class="alert alert-{{ form_message.type }}">
+                      <p style="text-align: center">{{ form_message.message }}</p>
+                  </div>
+                  {% endif %}
+                  <div class="contact-information">
+                    <form role="form" action="{% url "service_edit_page" service.hostname %}" method="POST">
+                      {% csrf_token %}
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="users">Users</label>
+                            <input type="number" class="form-control" id="users" name="users" placeholder="1" value="{{ service.users }}" min="1" max="100">
+                          </div>
+                        </div>
+                        <div class="col-md-10">
+                          <div class="form-group">
+                            <label for="hostname">Hostname</label>
+                              <input type="text" id="hostname" name="hostname" class="form-control" value="{{ service.hostname }}.mofficesuite.com" disabled="disabled">
+                          </div>
+                        </div>
+                      <div class="col-md-5">
+                        <button type="submit" class="btn btn-success btn-lg btn-block btn-cap">SAVE</button>
+                      </div>
+                      <div class="col-md-5">
+                        <button type="button" class="btn btn-warning btn-lg btn-block btn-cap" onClick='window.location.href="{% url "services_page" %}"'>CANCEL</button>
+                      </div>
+                      <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-lg btn-block btn-cap" onClick='window.location.href="{% url "service_delete_page" service.hostname %}"'><span class="icon-caution"></span> DELETE</button>
+                      </div>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}

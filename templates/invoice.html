@@ -52,7 +52,7 @@ table.sardor tbody td {
   line-height: 14px;
   padding: 4px;
   border: 0.4px solid #555;
-  font-size: 16px;
+  font-size: 14px;
   border-left: none;
   border-right: none;
 }
@@ -101,6 +101,7 @@ table.sardor tfoot td {
         <tr>
           <th>Service</th>
           <th>Plan</th>
+          <th>Users</th>
           <th>Days</th>
           <th>Start</th>
           <th>End</th>
@@ -110,18 +111,19 @@ table.sardor tfoot td {
       <tbody>
         {% for service in services %}
         <tr>
-          <td>{{ service.hostname }}</td>
-          <td>{{ service.plan }}</td>
-          <td>12</td>
-          <td>03/01/2014</td>
-          <td>03/13/2014</td>
-          <td>${{ user.balance }}</td>
+          <td align="center">{{ service.hostname }}</td>
+          <td align="center">{{ service.plan }}</td>
+          <td align="center">{{ service.users }}</td>
+          <td align="center">12</td>
+          <td align="center">03/01/2014</td>
+          <td align="center">03/13/2014</td>
+          <td align="center">${{ service.calculate_daily_bill }}</td>
         </tr>
         {% endfor %}
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="6" align="right">Total: ${{ user.balance }}</td>
+          <td colspan="6" align="right">Total: $</td>
         </tr>
       </tfoot>
     </table>

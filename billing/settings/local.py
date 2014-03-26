@@ -50,9 +50,7 @@ CACHES = {
 ########## TOOLBAR CONFIGURATION
 # See: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup
 INSTALLED_APPS += (
-    # 'debug_toolbar',
     'core',
-    'django_weasyprint',
 )
 
 MIDDLEWARE_CLASSES += (
@@ -67,6 +65,3 @@ INTERNAL_IPS = ('127.0.0.1',)
 AUTH_USER_MODEL = 'core.Account'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
-
-WEBODT_CONVERTER = 'webodt.converters.abiword.AbiwordODFConverter'
-WEBODT_TEMPLATE_PATH = SITE_ROOT + '/templates/'

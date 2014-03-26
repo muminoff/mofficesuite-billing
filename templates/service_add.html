@@ -18,7 +18,7 @@
                     <form role="form" action="{% url "service_add_page" %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <label for="service">Available plans</label>
+                        <label for="service">Plan</label>
                         <select class="form-control" id="plan" name="plan">
                           {% for plan in plans %}
                           <option value="{{ plan.id }}">{{ plan.name }} - ${{ plan.rate }} per user/month</option>
@@ -34,7 +34,7 @@
                       </div>
                       <div class="col-md-10">
                         <div class="form-group">
-                          <label for="hostname">Hostname</label>
+                          <label for="hostname">Hostname <small class="muted">(Only alphanumeric and maximum 16 characters allowed</small></label>
                           <div class="input-group">
                             <input id="hostname" name="hostname" type="text" class="form-control" style="text-align: right">
                               <span class="input-group-addon">.mofficesuite.com</span>

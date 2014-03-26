@@ -101,6 +101,7 @@ class Plan(models.Model):
 
     class Meta:
         db_table = 'plans'
+        ordering = ['rate', 'name']
 
 
 class Account(AbstractBaseUser):
@@ -174,7 +175,7 @@ class Service(models.Model):
             (STATE_STOPPED, 'stopped'),
             )
     id = models.CharField(max_length=24, primary_key=True, default=generate_service_id, editable=False)
-    hostname = models.CharField(max_length=255, null=False)
+    hostname = models.CharField(max_length=255, null=False, blank=False)
     plan = models.ForeignKey(Plan)
     users = models.PositiveIntegerField()
     account = models.ForeignKey(Account)
@@ -193,9 +194,21 @@ class Service(models.Model):
         return self.users * Plan.objects.get(id=self.plan_id).capacity
 
     @property
-    def current_bill(self):
+    def calculate_monthly_bill(self):
         import decimal
-        return self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
+        monthly_rate = self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
+        return decimal.Decimal(str("{:.2f}".format(monthly_rate)))
+
+    @property
+    def calculate_daily_bill(self):
+        import decimal
+        import calendar
+        import datetime
+        now = datetime.datetime.now()
+        total_days_in_this_month = calendar.monthrange(now.year, now.month)[1]
+        monthly_rate = self.users * decimal.Decimal(Plan.objects.get(id=self.plan_id).rate)
+        daily_rate = monthly_rate / total_days_in_this_month
+        return decimal.Decimal(str("{:.2f}".format(daily_rate * 12)))
 
     def __unicode__(self):
         return self.hostname
@@ -207,7 +220,9 @@ class Service(models.Model):
 class Invoice(models.Model):
     id = models.CharField(max_length=24, primary_key=True, default=generate_invoice_id, editable=False)
     account = models.ForeignKey(Account)
-    apply_date = models.DateTimeField(auto_now_add=True, editable=False)
+    issued_date = models.DateTimeField(auto_now_add=True, editable=False)
+    start = models.DateField(null=True, blank=True)
+    end = models.DateField(null=True, blank=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     charged_amount = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False)
     pdf_link = models.URLField()
@@ -217,7 +232,7 @@ class Invoice(models.Model):
 
     class Meta:
         db_table = 'invoices'
-        ordering = ['-apply_date']
+        ordering = ['-issued_date']
 
 
 class Notification(models.Model):
@@ -282,4 +297,4 @@ class ResetToken(models.Model):
         return self.token
 
     class Meta:
-        db_table = 'reset_tokens'
+        db_table = 'password_reset_tokens'

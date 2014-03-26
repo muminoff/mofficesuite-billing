@@ -25,10 +25,6 @@ def login_page(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        if not email and not password:
-            context = {"form_message": {"error": "Invalid login", "message": "All fields required", "type": "danger"}}
-            return render(request, 'login.html', context)
-
         user = authenticate(email=email, password=password)
         if user is not None:
 
@@ -38,18 +34,18 @@ def login_page(request):
                 if next_page:
                     return HttpResponseRedirect(next_page)
                 else:
-                    if request.user.is_staff:
-                        logout(request)
-                        context = {"form_message": {"error": "Invalid login", "message": "Admins not allowed :)", "type": "info"}}
-                        return render(request, 'login.html', context)
+                    # if request.user.is_staff:
+                    #     logout(request)
+                    #     context = {"form_message": {"title": "<span class=\"icon-caution\"></span> LOGIN ERROR", "message": "Admins not allowed :)", "type": "info", "animation": "animated fadeIn" }}
+                    #     return render(request, 'login.html', context)
 
                     return HttpResponseRedirect(reverse('services_page'))
             else:
-                context = {"form_message": {"error": "Invalid login", "message": "Account not activated.", "type": "danger"}}
+                context = {"form_message": {"title": "<span class=\"icon-caution\"></span> LOGIN ERROR", "message": "Account not activated.", "type": "warning", "animation": "animated shake" }}
                 return render(request, 'login.html', context)
 
         else:
-            context = {"form_message": {"error": "Invalid login", "message": "Invalid email or password", "type": "danger"}}
+            context = {"form_message": {"title": "<span class=\"icon-caution\"></span> LOGIN ERROR", "message": "Invalid email or password.", "type": "danger", "animation": "animated shake" }}
             return render(request, 'login.html', context)
 
     else:
@@ -61,6 +57,7 @@ def logout_page(request):
     logout(request)
     return HttpResponseRedirect(reverse('login_page'))
 
+
 def signup_page(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('index_page'))
@@ -69,19 +66,19 @@ def signup_page(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        if Account.objects.filter(email=email).count():
-            context = {"form_message": {"error": "Signup error", "message": "Email already exists.", "type": "danger"}}
+        if Account.objects.filter(email=email).exists():
+            context = {"form_message": {"title": "<span class=\"icon-caution\"></span> SIGNUP ERROR", "message": "Email already exists.", "type": "danger", "animation": "animated shake" }}
             return render(request, 'signup.html', context)
 
-        if not email and not password:
-            context = {"form_message": {"error": "Signup error", "message": "All fields required.", "type": "danger"}}
+        if not email or not password:
+            context = {"form_message": {"title": "<span class=\"icon-caution\"></span> SIGNUP ERROR", "message": "All fields are required.", "type": "danger", "animation": "animated shake" }}
             return render(request, 'signup.html', context)
 
         try:
             validate_email(email)
 
         except ValidationError:
-            context = {"form_message": {"error": "Signup error", "message": "Enter a valid email address.", "type": "danger"}}
+            context = {"form_message": {"title": "<span class=\"icon-caution\"></span> SIGNUP ERROR", "message": "Enter a valid email address.", "type": "danger", "animation": "animated shake" }}
             return render(request, 'signup.html', context)
             
         try:
@@ -234,8 +231,7 @@ def reset_page(request):
 
 @login_required
 def services_page(request):
-    context = { "services": Service.objects.filter(account=request.user) }
-    return render(request, 'services.html', context)
+    return render(request, 'services.html')
 
 @login_required
 def account_page(request):
@@ -431,7 +427,7 @@ def service_add_page(request):
             new_service.status = 'active'
             new_service.save()
 
-            Notification.objects.create(account=this_user, description="New service (%s plan) added." % new_service.plan, status="info")
+            Notification.objects.create(account=this_user, description="New service \"%s\" added." % new_service.hostname, status="info")
 
         except Exception as e:
             context = {"form_message": {"error": "Add service error", "message": str(e), "type": "danger"}}
@@ -446,6 +442,72 @@ def service_add_page(request):
 
         context = { "plans": Plan.objects.all()}
         return render(request, 'service_add.html', context)
+
+
+@login_required
+def service_edit_page(request, hostname):
+    if request.method == "POST":
+
+        users = request.POST.get('users')
+
+        if not users:
+            context = {
+                    "plans": Plan.objects.all(),
+                    "form_message": {"error": "Service error", "message": "No users given.", "type": "danger"}
+                    }
+            return render(request, 'service_edit.html', context)
+
+        try:
+            this_service = Service.objects.get(account=request.user, hostname=hostname)
+            this_service.users = users
+            this_service.save()
+            Notification.objects.create(account=this_service.account, description="Service \"%s\" modified." % (this_service.hostname), status="info")
+
+        except Exception as e:
+            context = {
+                    "form_message": {"error": "Service error", "message": str(e), "type": "danger"}
+                    }
+            return render(request, 'service_edit.html', context)
+
+        return HttpResponseRedirect(reverse('index_page'))
+
+    else:
+
+        print '>>>>>>>>>>>>>>>>>', hostname
+        if Service.objects.get(hostname=hostname).account != request.user:
+            context = {
+                    "plans": Plan.objects.all(),
+                    "form_message": {"error": "Service error", "message": "Prohibited.", "type": "danger"}
+                    }
+            return render(request, 'service_edit.html', context)
+
+        context = { "service": Service.objects.get(hostname=hostname) }
+        return render(request, 'service_edit.html', context)
+
+
+@login_required
+def service_delete_page(request, hostname):
+    if request.method == "POST":
+
+        try:
+            this_service = Service.objects.get(hostname=hostname)
+            this_account = this_service.account
+            this_service.delete()
+            Notification.objects.create(account=this_account, description="Service \"%s\" deleted." % (hostname), status="danger")
+
+        except Exception as e:
+            context = {
+                    "service": Service.objects.get(hostname=hostname),
+                    "form_message": {"error": "Service error", "message": str(e), "type": "danger"}
+                    }
+            return render(request, 'service_delete.html', context)
+
+        return HttpResponseRedirect(reverse('index_page'))
+
+    else:
+
+        context = { "service": Service.objects.get(hostname=hostname) }
+        return render(request, 'service_delete.html', context)
 
 
 def invoice_page(request):

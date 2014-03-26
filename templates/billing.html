@@ -34,7 +34,7 @@
                         <tbody>
                           {% for invoice in invoices %}
                           <tr>
-                            <td>{{ invoice.apply_date|date:"m/d/Y" }}</td>
+                            <td>{{ invoice.issued_date|date:"m/d/Y" }}</td>
                             <td>{{ invoice.description }}</td>
                             <td>${{ invoice.charged_amount }}</td>
                             <td><a href="{{ invoice.pdf_link }}" target="_blank" class="btn btn-xs"><span class="icon-paperclip"></span></a></td>

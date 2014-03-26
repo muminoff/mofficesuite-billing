@@ -91,3 +91,15 @@ def send_feedback(customer, subject, feedback):
 def generate_random_password(size=8):
     password = ''.join(random.choice(string.lowercase + string.digits + string.uppercase) for x in range(size))
     return password
+
+
+def generate_current_month_invoice(account):
+    from django_xhtml2pdf.utils import generate_pdf
+    from core.models import Invoice
+    context = {
+            "user": account,
+            "invoice_number": 124124,
+            "services": Service.objects.filter(account=request.user)
+            }
+    result = generate_pdf('invoice.html', file_object=resp, context=context)
+    return result
