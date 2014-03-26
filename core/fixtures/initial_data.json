@@ -1,0 +1,81 @@
+[
+{
+    "pk": "plan-0ygvs4f6u8mejc7a", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "0.50", 
+        "capacity": 10, 
+        "name": "Lite", 
+        "description": "Lite"
+    }
+},
+{
+    "pk": "plan-5a28pyfvi0cszk93", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "2.00", 
+        "capacity": 20, 
+        "name": "Standard Plus", 
+        "description": "Standard Plus"
+    }
+},
+{
+    "pk": "plan-5ocg9m6ya80bk134", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "0.50", 
+        "capacity": 5, 
+        "name": "Messenger", 
+        "description": "Messenger"
+    }
+},
+{
+    "pk": "plan-9p0ntudkf2iwcmg7", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "0.50", 
+        "capacity": 20, 
+        "name": "CloudDisk", 
+        "description": "CloudDisk"
+    }
+},
+{
+    "pk": "plan-dvlzsiob12ah7x9q", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "3.00", 
+        "capacity": 20, 
+        "name": "Advanced", 
+        "description": "Advanced"
+    }
+},
+{
+    "pk": "plan-td2me1i3syxn0l54", 
+    "model": "core.plan", 
+    "fields": {
+        "rate": "1.00", 
+        "capacity": 10, 
+        "name": "Standard", 
+        "description": "Standard"
+    }
+},
+{
+    "pk": "account-95ly2enxsa8zoh1d", 
+    "model": "core.account", 
+    "fields": {
+        "phone_number": null, 
+        "joined_date": "2014-03-26T11:46:25Z", 
+        "first_name": null, 
+        "last_name": null, 
+        "subscribed_to_news": true, 
+        "is_active": true, 
+        "last_login": "2014-03-26T11:47:23Z", 
+        "company_name": null, 
+        "company_address": null, 
+        "is_admin": true, 
+        "balance": "0.00", 
+        "password": "pbkdf2_sha256$12000$yYKxzZVjCh1O$dI+HyWVOSeDaYunyONusac4ohI8HbguzoNScFD0ID90=", 
+        "email": "support@mofficesoft.com"
+    }
+}
+]
