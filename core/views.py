@@ -91,13 +91,14 @@ def signup_page(request):
             token = ActivationToken(email=email)
             token.save()
             send_activation_token(request, token)
-            Notification.objects.create(account=user, description="Activation code sent.")
+            Notification.objects.create(account=user, description="Activation mail sent.")
 
         except Exception as e:
-            context = {"form_message": {"title": "<span class="\"icon-caution\"></span> SIGNUP ERROR", "message": "Cannot create account. Contact support team.<br/> DEBUG --> %s" % str(e), "type": "danger"}}
+            context = {"form_message": {"title": "<span class=\"icon-caution\"></span> SIGNUP ERROR", "message": "Cannot create account. Contact support team.<br/> DEBUG" + str(e), "type": "danger"}
+                    }
             return render(request, 'signup.html', context)
 
-        context = {"form_message": {"title": "<span class=\"icon-happy\"></span> SIGNUP SUCCESSFUL", "message": "Activation link sent.", "type": "success"}}
+        context = {"form_message": {"title": "<span class=\"icon-happy\"></span> SIGNUP SUCCESS", "message": " Activation mail sent.", "type": "success"}}
         return render(request, 'login.html', context)
             
 
