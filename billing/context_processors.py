@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def sidebar(request):
-    if request.user.is_authenticated and request.user.is_staff:
+    if request.user.is_authenticated and request.user.is_crew:
         menus = OrderedDict([
             ('services_page', {'title': 'Services', 'icon': 'cloud'}),
             ('account_page', {'title': 'Account', 'icon': 'profile-male'}),

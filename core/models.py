@@ -26,6 +26,13 @@ def generate_account_id():
             return 'account-' + id
 
 
+def generate_crew_id():
+    while True:
+        id = ''.join(random.sample(string.lowercase + string.digits, 16))
+        if not Crew.objects.filter(pk=id).exists():
+            return 'crew-' + id
+
+
 def generate_plan_id():
     while True:
         id = ''.join(random.sample(string.lowercase + string.digits, 16))
@@ -87,25 +94,14 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password):
-        user = self.create_user(email, password=password,)
+        user = self.create_user(
+            email=email,
+            password=password
+        )
         user.is_admin = True
+        user.is_crew = True
         user.save(using=self._db)
         return user
-
-
-class Plan(models.Model):
-    id = models.CharField(max_length=24, primary_key=True, default=generate_plan_id, editable=False)
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    rate = models.DecimalField(max_digits=5, decimal_places=2)
-    capacity = models.PositiveIntegerField()
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        db_table = 'plans'
-        ordering = ['rate', 'name']
 
 
 class Account(AbstractBaseUser):
@@ -127,10 +123,10 @@ class Account(AbstractBaseUser):
     # company_name = EncryptedTextField()
     # phone_number = EncryptedTextField()
     balance = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_activated = models.BooleanField(default=True)
     joined_date = models.DateTimeField(auto_now_add=True, editable=False)
     subscribed_to_news = models.BooleanField(default=True)
+    is_crew = models.BooleanField(default=True)
 
     objects = AccountManager()
 
@@ -163,15 +159,27 @@ class Account(AbstractBaseUser):
     def has_balance(self):
         return self.balance >= Decimal('1.00')
 
-    @property
-    def is_staff(self):
-        return self.is_admin
-
     def __unicode__(self):
         return self.email
 
     class Meta:
         db_table = 'accounts'
+        ordering = ['-joined_date', 'email']
+
+
+class Plan(models.Model):
+    id = models.CharField(max_length=24, primary_key=True, default=generate_plan_id, editable=False)
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    rate = models.DecimalField(max_digits=5, decimal_places=2)
+    capacity = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'plans'
+        ordering = ['rate', 'name']
 
 
 class Service(models.Model):

@@ -28,7 +28,7 @@ def login_page(request):
         user = authenticate(email=email, password=password)
         if user is not None:
 
-            if user.is_active:
+            if user.is_activated:
                 login(request, user)
                 next_page = request.POST.get('next')
                 if next_page:
@@ -85,7 +85,7 @@ def signup_page(request):
             user = Account()
             user.email = email
             user.set_password(password)
-            user.is_active = False
+            user.is_activated = False
             user.save()
             Notification.objects.create(account=user, description="Account created.")
             token = ActivationToken(email=email)
@@ -124,7 +124,7 @@ def activate_page(request):
             this_token = ActivationToken.objects.get(token=token)
             this_email = this_token.email
             this_user = Account.objects.get(email=this_email)
-            this_user.is_active = True
+            this_user.is_activated = True
             this_user.save()
             this_token.delete()
             Notification.objects.create(account=this_user, description="Account activated.", status="success")

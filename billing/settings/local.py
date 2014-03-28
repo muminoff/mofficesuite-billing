@@ -65,3 +65,4 @@ INTERNAL_IPS = ('127.0.0.1',)
 AUTH_USER_MODEL = 'core.Account'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
+ENCRYPTED_FIELDS_KEYDIR = SITE_ROOT + '/hmac/'

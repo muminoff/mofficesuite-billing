@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^services/$', 'core.views.services_page', name='services_page'),
     url(r'^services/add/$', 'core.views.service_add_page', name='service_add_page'),
     url(r'^service/(?P<hostname>.+)/$', 'core.views.service_edit_page', name='service_edit_page'),
-    url(r'^services/delete/(?P<hostname>.+)/$', 'core.views.service_delete_page', name='service_delete_page'),
+    url(r'^service/(?P<hostname>.+)/delete/$', 'core.views.service_delete_page', name='service_delete_page'),
     url(r'^account/$', 'core.views.account_page', name='account_page'),
     url(r'^billing/$', 'core.views.billing_page', name='billing_page'),
     url(r'^settings/$', 'core.views.settings_page', name='settings_page'),
@@ -27,11 +27,10 @@ urlpatterns = patterns('',
     url(r'^security/$', 'core.views.security_page', name='security_page'),
     url(r'^notifications/$', 'core.views.notifications_page', name='notifications_page'),
     url(r'^invoice/$', 'core.views.invoice_page', name='invoice_page'),
-    url(r'^admin/', include(admin.site.urls)),
 )
 
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += patterns('',
-                            url(r'^__debug__/', include(debug_toolbar.urls)),
-                            )
+# if settings.DEBUG:
+#     import debug_toolbar
+#     urlpatterns += patterns('',
+#                             url(r'^__debug__/', include(debug_toolbar.urls)),
+#                             )
