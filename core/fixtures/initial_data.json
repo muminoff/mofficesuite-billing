@@ -59,23 +59,4 @@
         "description": "Standard"
     }
 },
-{
-    "pk": "account-95ly2enxsa8zoh1d", 
-    "model": "core.account", 
-    "fields": {
-        "phone_number": null, 
-        "joined_date": "2014-03-26T11:46:25Z", 
-        "first_name": null, 
-        "last_name": null, 
-        "subscribed_to_news": true, 
-        "is_active": true, 
-        "last_login": "2014-03-26T11:47:23Z", 
-        "company_name": null, 
-        "company_address": null, 
-        "is_admin": true, 
-        "balance": "0.00", 
-        "password": "pbkdf2_sha256$12000$yYKxzZVjCh1O$dI+HyWVOSeDaYunyONusac4ohI8HbguzoNScFD0ID90=", 
-        "email": "support@mofficesoft.com"
-    }
-}
 ]
