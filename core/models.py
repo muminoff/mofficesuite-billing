@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+# from encrypted_fields import EncryptedTextField
 
 import random
 import string
@@ -120,6 +121,11 @@ class Account(AbstractBaseUser):
     company_address = models.CharField(max_length=255, null=True, blank=True)
     company_name = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
+    # first_name = EncryptedTextField()
+    # last_name = EncryptedTextField()
+    # company_address = EncryptedTextField()
+    # company_name = EncryptedTextField()
+    # phone_number = EncryptedTextField()
     balance = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
