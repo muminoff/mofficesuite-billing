@@ -1,1 +1,11 @@
-<h1>Whoops!</h1>
+{% extends "base.html" %}
+{% block title %}Page Not found{% endblock %}
+{% block page_title %}Internal Server Error{% endblock page_title %}
+{% block content %}
+            <div class="row">
+              <div class="signup-form">
+                <h1><span class="icon-hotairbaloon"></span> Internal Server Error.</h1>
+                <h3>Don't worry, we have reported this to developer. Soon, it will be fixed.</h3>
+              </div>
+            </div> 
+{% endblock %}
