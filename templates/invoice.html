@@ -115,8 +115,8 @@ table.sardor tfoot td {
           <td align="center">{{ service.plan }}</td>
           <td align="center">{{ service.users }}</td>
           <td align="center">12</td>
-          <td align="center">01/03/2014</td>
-          <td align="center">13/03/2014</td>
+          <td align="center">{{ service.created_at|date:"m/d/Y" }}</td>
+          <td align="center">{% now "m/d/Y" %}</td>
           <td align="center">${{ service.calculate_daily_bill }}</td>
         </tr>
         {% endfor %}

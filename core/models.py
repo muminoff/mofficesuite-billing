@@ -9,10 +9,13 @@ from django.contrib.sessions.models import Session
 from django.contrib.sites.models import Site
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission, Group
 Session._meta.db_table = 'sessions'
 Site._meta.db_table = 'sites'
 LogEntry._meta.db_table = 'admin_log'
 ContentType._meta.db_table = 'content_types'
+Permission._meta.db_table = 'moffice_auth_perm'
+Group._meta.db_table = 'moffice_auth_group'
 
 
 def generate_account_id():
