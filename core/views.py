@@ -94,10 +94,10 @@ def signup_page(request):
             Notification.objects.create(account=user, description="Activation code sent.")
 
         except Exception as e:
-            context = {"form_message": {"error": "Signup error", "message": "Cannot activate account. Contact support team.", "type": "danger"}}
+            context = {"form_message": {"title": "<span class="\"icon-caution\"></span> SIGNUP ERROR", "message": "Cannot create account. Contact support team.<br/> DEBUG --> %s" % str(e), "type": "danger"}}
             return render(request, 'signup.html', context)
 
-        context = {"form_message": {"error": "Signup successful", "message": "Activation link sent.", "type": "success"}}
+        context = {"form_message": {"title": "<span class="\"icon-happy\"></span> SIGNUP SUCCESSFUL", "message": "Activation link sent.", "type": "success"}}
         return render(request, 'login.html', context)
             
 
