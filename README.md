@@ -2,6 +2,8 @@
 MofficeSuite Billing System
 ===========================
 
+![image](/login.png)
+
 Installation of Dependencies
 ----------------------------
 
